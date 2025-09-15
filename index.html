@@ -18,6 +18,7 @@
   input[type=text],input[type=number],select,textarea{
     width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-top:6px;font-size:1rem;background:#fff
   }
+  h3{margin:15px 0 35px 0;font-size:1.00rem}
   textarea{resize:vertical;min-height:120px}
   .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
   .muted{color:var(--muted);font-size:0.85rem}
@@ -88,33 +89,34 @@
     </div>
   </section>
 
- <!-- SECTION: Only MHE and MHC -->
+ <!-- SECTION: User Options -->
  <section class="section">
     <h2>Choose one or more request</h2>
 <div id="UserOption">
    <div class="row"> 
-     <label><input name="updatedetails" class="persist" type="checkbox">A. Update Customer Details</label>
+     <label><input id="Updatedetails" class="persist" type="checkbox">A. Update Customer Details</label>
    </div>
   <div class="row">
-    <label><input name="updatedetails" class="persist" type="checkbox">B. Change of Payment Mode</label>
+    <label><input id="Changepaymentmode" class="persist" type="checkbox">B. Change of Payment Mode</label>
   </div>
   <div class="row">
-    <label><input name="updatedetails" class="persist" type="checkbox">C. Change of Payment Method</label>
+    <label><input id="Changepaymentmethod" class="persist" type="checkbox">C. Change of Payment Method</label>
   </div>
   <div class="row">
-  <label><input name="updatedetails" class="persist" type="checkbox">D. Change of Signature</label>
+  <label><input id="Changesignature" class="persist" type="checkbox">D. Change of Signature</label>
   </div>
   <div class="row">
-    <label><input name="updatedetails" class="persist" type="checkbox">E. Others</label>
+    <label><input id="Others" class="persist" type="checkbox">E. Others</label>
   </div>
 </div>
    </section>
 
   <!-- SECTION: MHSE Options -->
-  <section class="section">
-    <h2>MHSE Options</h2>
+  <section class="section" id="UpdateDetails">
+    <h2>A. Update Customer Details</h2>
     
     <section class="section">
+    <h3>Customer's Role</h3>
     <label style="flex:1">Deductible Option</label>
         <div class="row">
       <label class="inline"><input name="Deductibletype" class="persist" id="MHSE_Deductible_500" type="radio">RM500</label>
