@@ -27,6 +27,18 @@
   button.ghost{background:transparent;border:1px solid var(--line);color:#333}
   .actions{display:flex;gap:12px;align-items:center}
 
+  .grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
   /* Signature preview tiles */
   .sig-preview{
@@ -110,6 +122,28 @@
   </div>
 </div>
    </section>
+
+  <section class="section">
+    <h2>Choose one or more request</h2>
+    <div id="UserOption" class="grid-2">
+      <div>
+        <label><input id="Updatedetails" class="persist" type="checkbox">A. Update Customer Details</label>
+      </div>
+      <div>
+        <label><input id="Changepaymentmode" class="persist" type="checkbox">B. Change of Payment Mode</label>
+      </div>
+      <div>
+        <label><input id="Changepaymentmethod" class="persist" type="checkbox">C. Change of Payment Method</label>
+      </div>
+      <div>
+        <label><input id="Changesignature" class="persist" type="checkbox">D. Change of Signature</label>
+      </div>
+      <div>
+        <label><input id="Others" class="persist" type="checkbox">E. Others</label>
+      </div>
+    </div>
+</section>
+
 
   <!-- SECTION: MHSE Options -->
   <section class="section" id="UpdateDetails">
