@@ -913,6 +913,52 @@ $("generate").addEventListener("click", fillPDF);
 $("resetAll").addEventListener("click", resetAll);
 document.querySelectorAll(".persist").forEach(autoBindSave);
 
+
+// ---------- SECTION TOGGLE LOGIC ----------
+document.addEventListener("DOMContentLoaded", () => {
+  // Map each controlling checkbox to its section ID
+  const sectionMap = {
+    "Updatedetails": "UpdateDetails",
+    "Changepaymentmode": "ChangePaymentModeSection",   // (example placeholder)
+    "Changepaymentmethod": "ChangePaymentMethodSection", // (example placeholder)
+    "Changesignature": "ChangeSignatureSection",   // (example placeholder)
+    "Others": "OtherSection"                       // (example placeholder)
+  };
+
+  // Init + bind change events
+  Object.keys(sectionMap).forEach(cbId => {
+    const cb = $(cbId);
+    const sec = $(sectionMap[cbId]);
+    if (!cb || !sec) return;
+
+    // Hide initially if not checked
+    sec.style.display = cb.checked ? "block" : "none";
+
+    // Toggle on change
+    cb.addEventListener("change", () => {
+      sec.style.display = cb.checked ? "block" : "none";
+    });
+  });
+
+  // For nested roles inside UpdateDetails
+  const roleMap = {
+    "Simple_Update_Insured": "UpdateInsuredDetails",
+    "Simple_Update_PO": "UpdatePODetails",
+    "Simple_Update_Nominee": "UpdateNomineeDetails"
+  };
+
+  Object.keys(roleMap).forEach(cbId => {
+    const cb = $(cbId);
+    const sec = $(roleMap[cbId]);
+    if (!cb || !sec) return;
+
+    sec.style.display = cb.checked ? "block" : "none";
+
+    cb.addEventListener("change", () => {
+      sec.style.display = cb.checked ? "block" : "none";
+    });
+  });
+});
   
 </script>
 </main> 
