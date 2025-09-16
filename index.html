@@ -129,7 +129,7 @@
   <section class="section" id="UpdateDetails">
     <h2>A. Update Customer Details</h2>
     
-    <h3>Customer's Role</h3><small class="muted">(choose one or more)</small>
+    <h3>Customer's Role<small class="muted">(choose one or more)</small></h3>
         <div class="row">
       <label class="inline"><input class="persist" id="Simple_Update_Insured" type="checkbox">Insured</label>
       <label class="inline"><input class="persist" id="Simple_Update_PO" type="checkbox">Policy Owner</label>
@@ -252,6 +252,39 @@
            <div>
         <label class="inline"><input id="Simple_Payment_Monthly" class="persist"  name="Paymentmodetype" type="radio">Monthly</label>
       </div>
+    </div>
+  </section>
+
+  <!-- SECTION: Change Signature -->
+  <section class="section" id="ChangeSignatureSection">
+    <h2>C. Change of Signature</h2>
+    <div id="UserOption" class="grid-2">
+      <div>
+        <label class="inline"><input id="Simple_ChangeSig_Insuredl" class="persist"  name="Changesignature" type="radio">Insured</label>
+      </div>
+      <div>
+        <label class="inline"><input id="Simple_ChangeSig_PO" class="persist"  name="Changesignature" type="radio">Policy Owner</label>
+      </div>
+           <div>
+        <label class="inline"><input id="Simple_ChangeSig_Assignee" class="persist"  name="Changesignature" type="radio">Assignee</label>
+      </div>
+           <div>
+        <label class="inline"><input id="Simple_ChangeSig_Trustee" class="persist"  name="Changesignature" type="radio">Trustee</label>
+      </div>
+    </div>
+
+      <div class="sig-preview" id="preview_witness" onclick="openSig('witness')">
+      <span>Tap to Sign (Old Signature)</span>
+    </div>
+    <div class="row">
+      <button id="clearPreviewWitness" class="secondary" type="button">Clear Signature</button>
+    </div>
+
+      <div class="sig-preview" id="preview_witness" onclick="openSig('witness')">
+      <span>Tap to Sign (New Signature)</span>
+    </div>
+    <div class="row">
+      <button id="clearPreviewWitness" class="secondary" type="button">Clear Signature</button>
     </div>
   </section>
 
