@@ -915,31 +915,40 @@ document.querySelectorAll(".persist").forEach(autoBindSave);
 
 // ---------- SECTION TOGGLE LOGIC ----------
 document.addEventListener("DOMContentLoaded", () => {
-  // Map each controlling checkbox to its section ID
+  // Utility: enable/disable all inputs in a section
+  function setSectionEnabled(sectionEl, enabled) {
+    if (!sectionEl) return;
+    const inputs = sectionEl.querySelectorAll("input, select, textarea");
+    inputs.forEach(el => el.disabled = !enabled);
+  }
+
+  // Map each controlling checkbox → section
   const sectionMap = {
     "Updatedetails": "UpdateDetails",
-    "Changepaymentmode": "ChangePaymentModeSection",   // (example placeholder)
-    "Changepaymentmethod": "ChangePaymentMethodSection", // (example placeholder)
-    "Changesignature": "ChangeSignatureSection",   // (example placeholder)
-    "Others": "OtherSection"                       // (example placeholder)
+    "Changepaymentmode": "ChangePaymentModeSection",
+    "Changepaymentmethod": "ChangePaymentMethodSection",
+    "Changesignature": "ChangeSignatureSection",
+    "Others": "OtherSection"
   };
 
-  // Init + bind change events
+  // Toggle logic
   Object.keys(sectionMap).forEach(cbId => {
     const cb = $(cbId);
     const sec = $(sectionMap[cbId]);
     if (!cb || !sec) return;
 
-    // Hide initially if not checked
+    // Initial state
     sec.style.display = cb.checked ? "block" : "none";
+    setSectionEnabled(sec, cb.checked);
 
-    // Toggle on change
+    // On change
     cb.addEventListener("change", () => {
       sec.style.display = cb.checked ? "block" : "none";
+      setSectionEnabled(sec, cb.checked);
     });
   });
 
-  // For nested roles inside UpdateDetails
+  // Nested role sections (inside UpdateDetails)
   const roleMap = {
     "Simple_Update_Insured": "UpdateInsuredDetails",
     "Simple_Update_PO": "UpdatePODetails",
@@ -952,9 +961,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!cb || !sec) return;
 
     sec.style.display = cb.checked ? "block" : "none";
+    setSectionEnabled(sec, cb.checked);
 
     cb.addEventListener("change", () => {
       sec.style.display = cb.checked ? "block" : "none";
+      setSectionEnabled(sec, cb.checked);
     });
   });
 });
