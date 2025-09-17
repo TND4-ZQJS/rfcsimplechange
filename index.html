@@ -223,7 +223,7 @@
 
   </section>
 
-  <!-- SECTION: Change of Payment mode -->
+  <!-- SECTION: Change of Payment Type -->
   <section class="section" id="ChangePaymentModeSection">
     <h2>B. Change of Payment Method</h2>
     <div id="UserOption" class="grid-2">
@@ -236,7 +236,7 @@
     </div>
   </section>
 
-    <!-- SECTION: Change of Payment mode -->
+    <!-- SECTION: Change of Payment Mode -->
   <section class="section" id="ChangePaymentMethodSection">
     <h2>C. Change of Payment Mode</h2>
     <div id="UserOption" class="grid-2">
@@ -311,7 +311,7 @@
     <h2>Signature Details</h2>
     <div class="row">
       <label style="flex:1">Signed at (State)
-        <select id="MHSE_Sign_State" class="persist">
+        <select id="Simple_SignState" class="persist">
           <option value="">-- Select State --</option>
           <!-- Same bel set used in your reference -->
           <option>SELANGOR</option><option>K.LUMPUR</option><option>MELAKA</option><option>JOHOR</option>
@@ -323,7 +323,7 @@
     </div>
     <div class="row">
       <label style="flex:1">Day
-        <select id="MHSE_Sign_Date" class="persist">
+        <select id="Simple_SignDay" class="persist">
           <option value="">-- Day (DD) --</option>
           <option>01</option><option>02</option><option>03</option><option>04</option>
           <option>05</option><option>06</option><option>07</option><option>08</option>
@@ -336,7 +336,7 @@
         </select>
       </label>
       <label style="flex:1">Month
-        <select id="MHSE_Sign_Month" class="persist">
+        <select id="Simple_SignMonth" class="persist">
           <option value="">-- Month --</option>
           <option>JANUARY</option><option>FEBRUARY</option><option>MARCH</option><option>APRIL</option>
           <option>MAY</option><option>JUNE</option><option>JULY</option><option>AUGUST</option>
@@ -344,7 +344,7 @@
         </select>
       </label>
       <label style="flex:1">Year
-        <select id="MHSE_Sign_Year" class="persist">
+        <select id="Simple_SignYear" class="persist">
           <option value="">-- Year (YYYY) --</option>
           <option>2025</option><option>2026</option>
         </select>
@@ -357,12 +357,12 @@
     <h2>Signature of Policy Owner/Assignee</h2>
     <div class="row">
       <label style="flex:1">Policyowner/Assignee Name
-        <input id="MHSE_Sign_POName" class="persist" type="text" placeholder="Enter name">
+        <input id="Simple_SignPO_Name" class="persist" type="text" placeholder="Enter name">
       </label>
     </div>
     <div class="row">
     <label style="flex:1">IC No.
-        <input id="MHSE_Sign_PONIRC" class="persist" type="text" placeholder="e.g. 900101-14-1234">
+        <input id="Simple_SignPO_NIRC" class="persist" type="text" placeholder="e.g. 900101-14-1234">
     </label>
     </div>
 
@@ -379,15 +379,15 @@
     <h2>Signature of Witness</h2>
     <div class="row">
       <label style="flex:1">Name of Witness
-        <input id="MHSE_Sign_WitnessName" class="persist" type="text" placeholder="Enter name">
+        <input id="Simple_SignWitness_Name" class="persist" type="text" placeholder="Enter name">
       </label>
     </div>
     <div class="row">
       <label style="flex:1">IC No.
-        <input id="MHSE_Sign_WitnessNIRC" class="persist" type="text" placeholder="e.g. 800202-08-5678">
+        <input id="Simple_SignWitness_NIRC" class="persist" type="text" placeholder="e.g. 800202-08-5678">
       </label>
       <label style="flex:1">Mobile No.
-        <input id="MHSE_Sign_WitnessTel" class="persist" type="text" placeholder="e.g. 012-23456789">
+        <input id="Simple_SignWitness_Mobile" class="persist" type="text" placeholder="e.g. 012-23456789">
       </label>
     </div>
 
@@ -399,23 +399,23 @@
     </div>
   </section>
   
-    <!-- SECTION: Trustee -->
+    <!-- SECTION: Assignee -->
   <section class="section">
-    <h2>Signature of Trustee</h2>
+    <h2>Signature of Assignee</h2>
     <div class="row">
-      <label style="flex:1">Trustee Name
-        <input id="MHSE_Sign_TrusteeName" class="persist" type="text" placeholder="Enter name">
+      <label style="flex:1">Assignee Name
+        <input id="Simple_SignAssignee_Name" class="persist" type="text" placeholder="Enter name">
       </label>
     </div>
     <div class="row">
     <label style="flex:1">IC No.
-        <input id="MHSE_Sign_TrusteeNIRC" class="persist" type="text" placeholder="e.g. 900101-14-1234">
+        <input id="Simple_SignAssignee_NIRC" class="persist" type="text" placeholder="e.g. 900101-14-1234">
     </label>
     </div>
 
 
     <div class="sig-preview" id="preview_trustee" onclick="openSig('trustee')">
-      <span>Tap to Sign (Trustee)</span>
+      <span>Tap to Sign (Assignee)</span>
     </div>
     <div class="row">
       <button id="clearPreviewTrustee" class="secondary" type="button">Clear Signature</button>
@@ -727,25 +727,26 @@ function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames) {
   });
 }
 
-// Deductible option (UI name: "Deductibletype")
-mapRadioGroupToPdfCheckboxes("Deductibletype", [
-  "MHSE_Deductible_500",
-  "MHSE_Deductible_1k",
-  "MHSE_Deductible_5k",
-  "MHSE_Deductible_10k"
+// Payment Mode option (UI name: "Paymentmodetype")
+mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
+  "Simple_Payment_Annual",
+  "Simple_Payment_SemiAnnual",
+  "Simple_Payment_Quarterly",
+  "Simple_Payment_Monthly"
 ]);
 
-// Plan option (UI name: "Plantype")
-mapRadioGroupToPdfCheckboxes("Plantype", [
-  "MHSE_Plan_200",
-  "MHSE_Plan_300",
-  "MHSE_Plan_1000"
+// Payment Method option (UI name: "Paymentmethodtype")
+mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
+  "Simple_Payment_FPX",
+  "Simple_Payment_Internet"
 ]);
 
-// Account type (UI name: "Banktype")
-mapRadioGroupToPdfCheckboxes("Banktype", [
-  "MHSE_EBanking_Islamic",
-  "MHSE_EBanking_Conventional"
+// Change Signature Role type (UI name: "Changesignature")
+mapRadioGroupToPdfCheckboxes("Changesignature", [
+  "Simple_ChangeSig_Insured",
+  "Simple_ChangeSig_Assignee",
+  "Simple_ChangeSig_PO",
+  "Simple_ChangeSig_Trustee"
 ]);
 /* ===== end mapping ===== */
 
@@ -753,33 +754,51 @@ mapRadioGroupToPdfCheckboxes("Banktype", [
 
     // FILL FORM FIELDS FROM LOCALSTORAGE HERE
 [
-  "MHSE_Info_InsName",
-  "MHSE_Info_PolicyNo",
-  "MHSE_Info_InsNIRC",
-  "MHSE_Info_POName",
-  "MHSE_Info_POMobile",
-  "MHSE_Info_POEmail",
-  "MHSE_TerminateStandalone",
-  "MHSE_IncPremium_Check",
-  "MHSE_IncPremium_Amount",
-  "MHSE_AddRegularTU_Check",
-  "MHSE_AddRegularTU_Amount",
-  "MHSE_Ebanking_Check",
-  "MHSE_EBanking_Name",
-  "MHSE_EBanking_NIRC",
-  "MHSE_EBanking_BankAcc",
-  "MHSE_EBanking_BankName",
-  "MHSE_Sign_State",
-  "MHSE_Sign_Date",
-  "MHSE_Sign_Month",
-  "MHSE_Sign_Year",
-  "MHSE_Sign_POName", 
-  "MHSE_Sign_PONIRC", 
-  "MHSE_Sign_WitnessName",
-  "MHSE_Sign_WitnessNIRC",
-  "MHSE_Sign_WitnessTel",
-  "MHSE_Sign_TrusteeName",
-  "MHSE_Sign_TrusteeNIRC"
+  "Simple_BasicInfo_InsuredName",
+  "Simple_BasicInfo_PolicyNo",
+  "Simple_BasicInfo_InsuredNIRC",
+  "Simple_Update_Name",
+  "Simple_Update_Insured",
+  "Simple_Update_InsuredName",
+  "Simple_Update_DOB",
+  "Simple_Update_PO",
+  "Simple_Update_Nominee",
+  "Simple_Update_NIRC",
+  "Simple_Update_Sex",
+  "Simple_Update_Country",
+  "Simple_Update_Nationality",
+  "Simple_Update_InsuredDOB",
+  "Simple_Update_InsuredNIRC",
+  "Simple_Update_InsuredSex",
+  "Simple_Update_InsuredCountry",
+  "Simple_Update_InsuredNationality",
+  "Simple_Update_POName",
+  "Simple_Update_PODOB",
+  "Simple_Update_PONIRC", 
+  "Simple_Update_POSex", 
+  "Simple_Update_POCountry",
+  "Simple_Update_PONationality",
+  "Simple_Update_NomineeName",
+  "Simple_Update_NomineeDOB",
+  "Simple_Update_NomineeNIRC",
+  "Simple_Update_NomineeSex",
+  "Simple_Update_NomineeCountry",
+  "Simple_Update_NomineeNationality",
+  "Simple_Update_Others_Line1",
+  "Simple_Update_Others_Line2",
+  "Simple_Update_Others_Line3",
+  "Simple_Update_Others_Line4",
+  "Simple_SignState",
+  "Simple_SignDay",
+  "Simple_SignMonth",
+  "Simple_SignYear",
+  "Simple_SignPO_Name",
+  "Simple_SignPO_NIRC",
+  "Simple_SignAssignee_Name",
+  "Simple_SignAssignee_NIRC",
+  "Simple_SignWitness_Name",
+  "Simple_SignWitness_NIRC",
+  "Simple_SignWitness_Mobile"
 ].forEach(fieldName => {
   safeSetField(form, fieldName, localStorage.getItem(fieldName));
 });
