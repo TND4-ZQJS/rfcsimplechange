@@ -699,7 +699,7 @@ $("clearPreview_Simple_Assignee").addEventListener("click", ()=>{
   $("preview_simple_assignee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
 });
 $("clearPreview_Simple_Oldsig").addEventListener("click", ()=>{
-  localStorage.removeItem("sig__simple_oldsig");
+  localStorage.removeItem("sig_simple_oldsig");
   $("preview_simple_oldsig").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
 });
 $("clearPreview_Simple_Newsig").addEventListener("click", ()=>{
@@ -709,7 +709,7 @@ $("clearPreview_Simple_Newsig").addEventListener("click", ()=>{
 window.addEventListener("DOMContentLoaded", ()=>{
   ["owner","witness","assignee","oldsig","newsig"].forEach(role=>{
     const saved = localStorage.getItem("sig_"+role);
-    if(saved){ $("preview_simple_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
+    if(saved){ $("preview_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
   });
 });
   
