@@ -685,31 +685,31 @@ window.addEventListener("resize", ()=> {
   }
 });
 
-/* Clear preview buttons + restore previews on load */
+/* Clear preview buttons + Restore previews on load */
 $("clearPreview_Simple_Owner").addEventListener("click", ()=>{
   localStorage.removeItem("sig_simple_owner");
-  $("preview_owner").innerHTML = `<span>Tap to Sign (Owner)</span>`;
+  $("preview_simple_owner").innerHTML = `<span>Tap to Sign (Owner)</span>`;
 });
 $("clearPreview_Simple_Witness").addEventListener("click", ()=>{
   localStorage.removeItem("sig__simple_witness");
-  $("preview_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
+  $("preview_simple_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
 });
 $("clearPreview_Simple_Assignee").addEventListener("click", ()=>{
   localStorage.removeItem("sig_simple_assignee");
-  $("preview_trustee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
+  $("preview_simple_assignee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
 });
 $("clearPreview_Simple_Oldsig").addEventListener("click", ()=>{
   localStorage.removeItem("sig__simple_oldsig");
-  $("preview_witness").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
+  $("preview_simple_oldsig").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
 });
 $("clearPreview_Simple_Newsig").addEventListener("click", ()=>{
   localStorage.removeItem("sig_simple_newsig");
-  $("preview_trustee").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
+  $("preview_simple_newsig").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
 });
 window.addEventListener("DOMContentLoaded", ()=>{
   ["owner","witness","assignee","oldsig","newsig"].forEach(role=>{
-    const saved = localStorage.getItem("sig_"+role);
-    if(saved){ $("preview_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
+    const saved = localStorage.getItem("sig_simple"+role);
+    if(saved){ $("preview_simple"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
   });
 });
   
