@@ -822,7 +822,7 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
 const sig_Simple_Owner = localStorage.getItem("sig_simple_owner");
 if (sig_Simple_Owner) {
   try {
-    const img_Simple_Owner = await pdfDoc.embedPng(sigOwner);
+    const img_Simple_Owner = await pdfDoc.embedPng(sig_Simple_Owner);
     const { width, height } = img_Simple_Owner.size();
 
     const previewEl = document.getElementById("preview_simple_owner");
