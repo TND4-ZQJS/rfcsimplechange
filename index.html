@@ -820,7 +820,7 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
 
 // Owner signature FillPDF
 const sig_Simple_Owner = localStorage.getItem("sig_simple_owner");
-if (sigOwner) {
+if (sig_Simple_Owner) {
   try {
     const img_Simple_Owner = await pdfDoc.embedPng(sigOwner);
     const { width, height } = img_Simple_Owner.size();
@@ -853,7 +853,7 @@ if (sigOwner) {
 
 // Witness signature FillPDF
 const sig_Simple_Witness = localStorage.getItem("sig_simple_witness");
-if (sigWitness) {
+if (sig_Simple_Witness) {
   try {
     const img_Simple_Witness = await pdfDoc.embedPng(sig_Simple_Witness);
     const { width, height } = img_Simple_Witness.size();
@@ -885,7 +885,7 @@ if (sigWitness) {
 }
 
 
-// Trustee signature FillPDF
+// Assignee signature FillPDF
 const sig_Simple_Assignee = localStorage.getItem("sig_simple_assignee");
 if (sig_Simple_Assignee) {
   try {
@@ -907,7 +907,7 @@ if (sig_Simple_Assignee) {
     drawW *= factor;
     drawH *= factor;
 
-    page.drawImage(img_Simple_Trustee, {
+    page.drawImage(img_Simple_Assignee, {
       x: posX,
       y: posY,
       width: drawW,
