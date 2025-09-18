@@ -636,8 +636,8 @@ function closeSigModal(){
 $("sigDone").addEventListener("click", ()=>{
   if(!sigTarget) return;
   const dataURL = sigCanvas.toDataURL("image/png");
-  localStorage.setItem("sig_simple_"+sigTarget, dataURL);
-  const preview = $("preview_simple_"+sigTarget);
+  localStorage.setItem("sig_"+sigTarget, dataURL);
+  const preview = $("preview_"+sigTarget);
   preview.innerHTML = `<img alt="Signature ${sigTarget}" src="${dataURL}">`;
   closeSigModal();
 });
@@ -708,7 +708,7 @@ $("clearPreview_Simple_Newsig").addEventListener("click", ()=>{
 });
 window.addEventListener("DOMContentLoaded", ()=>{
   ["owner","witness","assignee","oldsig","newsig"].forEach(role=>{
-    const saved = localStorage.getItem("sig_simple_"+role);
+    const saved = localStorage.getItem("sig_"+role);
     if(saved){ $("preview_simple_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
   });
 });
