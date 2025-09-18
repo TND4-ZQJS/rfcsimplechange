@@ -731,14 +731,22 @@ async function fillPDF(){
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
 // helper to map a radio group (saved under groupName) to a list of PDF checkbox field names
 function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames) {
-  const selectedId = localStorage.getItem(groupName); // e.g. "MHSE_Deductible_1000"
-  // For safety, uncheck all first then check the selected one
+  const selectedId = localStorage.getItem(groupName);
+
   pdfCheckboxNames.forEach(fieldName => {
-    const shouldCheck = (fieldName === selectedId);
-    safeSetField(form, fieldName, shouldCheck); // safeSetField knows how to check/uncheck
+    try {
+      const field = form.getCheckBox(fieldName);
+      if (fieldName === selectedId) {
+        field.check();
+      } else {
+        field.uncheck();
+      }
+    } catch (e) {
+      console.warn(`Checkbox field ${fieldName} not found in PDF`);
+    }
   });
 }
-
+    
 // Payment Mode option (UI name: "Paymentmodetype")
 mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
   "Simple_Payment_Annual",
