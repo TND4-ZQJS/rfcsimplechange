@@ -451,7 +451,7 @@
 }
   
 /* ---------- CONFIG ---------- */
-const PDF_FILENAME = "CampaignApplicationForm_LF1047_fillable.pdf";
+const PDF_FILENAME = "Request For Change of Customer Details And Payment Method_LF5188_fillable.pdf";
 
 /* ---SAVE STATUS + LOCALSTORAGE (Text, Checkbox, Dropdown) ---------- */
 const saveStatusEl = document.getElementById("saveStatus");
@@ -726,7 +726,7 @@ async function fillPDF(){
     const form = pdfDoc.getForm();
 
     const pages = pdfDoc.getPages();
-    const page = pages[1]; // use first page
+    const page = pages[1]; // use 2nd page
 
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
 // helper to map a radio group (saved under groupName) to a list of PDF checkbox field names
