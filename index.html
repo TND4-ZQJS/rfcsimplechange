@@ -999,7 +999,7 @@ if (sig_Simple_Newsig) {
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "Filled_Credit_Card_Form.pdf"; document.body.appendChild(a); a.click(); a.remove();
+    const a = document.createElement("a"); a.href = url; a.download = "Filled_RFC_Simple_Change.pdf"; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=> URL.revokeObjectURL(url), 2500);
 
   } catch(err){
