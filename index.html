@@ -590,14 +590,18 @@ function resizeSigCanvas(){
 }
 
 function openSig(target){
-  sigTarget = target; // 'owner' | 'witness' | 'trustee'
+  sigTarget = target; // 'simple_owner' | 'simple_witness' | 'simple_assignee' | 'simple_oldsig'| 'simple_newsig'
 
-if (target === 'owner') {
+if (target === 'simple_owner') {
   $("sigModalTitle").textContent = "Sign: Policy Owner";
-} else if (target === 'witness') {
+} else if (target === 'simple_witness') {
   $("sigModalTitle").textContent = "Sign: Witness";
-} else if (target === 'trustee') {
+} else if (target === 'simple_assignee') {
   $("sigModalTitle").textContent = "Sign: Trustee";
+} else if (target === 'simple_oldsig') {
+  $("sigModalTitle").textContent = "Sign: Old Signature";
+} else if (target === 'simple_newsig') {
+  $("sigModalTitle").textContent = "Sign: New Signature";
 }
 
   sigModal.style.display = "block";
@@ -682,20 +686,28 @@ window.addEventListener("resize", ()=> {
 });
 
 /* Clear preview buttons + restore previews on load */
-$("clearPreviewOwner").addEventListener("click", ()=>{
-  localStorage.removeItem("sig_owner");
+$("clearPreview_Simple_Owner").addEventListener("click", ()=>{
+  localStorage.removeItem("sig_simple_owner");
   $("preview_owner").innerHTML = `<span>Tap to Sign (Owner)</span>`;
 });
-$("clearPreviewWitness").addEventListener("click", ()=>{
-  localStorage.removeItem("sig_witness");
+$("clearPreview_Simple_Witness").addEventListener("click", ()=>{
+  localStorage.removeItem("sig__simple_witness");
   $("preview_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
 });
-$("clearPreviewTrustee").addEventListener("click", ()=>{
-  localStorage.removeItem("sig_trustee");
-  $("preview_trustee").innerHTML = `<span>Tap to Sign (Trustee)</span>`;
+$("clearPreview_Simple_Assignee").addEventListener("click", ()=>{
+  localStorage.removeItem("sig_simple_assignee");
+  $("preview_trustee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
+});
+$("clearPreview_Simple_Oldsig").addEventListener("click", ()=>{
+  localStorage.removeItem("sig__simple_oldsig");
+  $("preview_witness").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
+});
+$("clearPreview_Simple_Newsig").addEventListener("click", ()=>{
+  localStorage.removeItem("sig_simple_newsig");
+  $("preview_trustee").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
 });
 window.addEventListener("DOMContentLoaded", ()=>{
-  ["owner","witness","trustee"].forEach(role=>{
+  ["owner","witness","assignee","oldsig","newsig"].forEach(role=>{
     const saved = localStorage.getItem("sig_"+role);
     if(saved){ $("preview_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
   });
@@ -807,13 +819,13 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
     /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
 
 // Owner signature FillPDF
-const sigOwner = localStorage.getItem("sig_owner");
+const sig_Simple_Owner = localStorage.getItem("sig_simple_owner");
 if (sigOwner) {
   try {
-    const imgOwner = await pdfDoc.embedPng(sigOwner);
-    const { width, height } = imgOwner.size();
+    const img_Simple_Owner = await pdfDoc.embedPng(sigOwner);
+    const { width, height } = img_Simple_Owner.size();
 
-    const previewEl = document.getElementById("preview_owner");
+    const previewEl = document.getElementById("preview_simple_owner");
     const boxW = previewEl.offsetWidth;
     const boxH = previewEl.offsetHeight;
 
@@ -828,7 +840,7 @@ if (sigOwner) {
     drawW *= factor;
     drawH *= factor;
 
-    page.drawImage(imgOwner, {
+    page.drawImage(img_Simple_Owner, {
       x: posX,
       y: posY,
       width: drawW,
@@ -840,13 +852,13 @@ if (sigOwner) {
 }
 
 // Witness signature FillPDF
-const sigWitness = localStorage.getItem("sig_witness");
+const sig_Simple_Witness = localStorage.getItem("sig_simple_witness");
 if (sigWitness) {
   try {
-    const imgWitness = await pdfDoc.embedPng(sigWitness);
-    const { width, height } = imgWitness.size();
+    const img_Simple_Witness = await pdfDoc.embedPng(sig_Simple_Witness);
+    const { width, height } = img_Simple_Witness.size();
 
-    const previewEl = document.getElementById("preview_witness");
+    const previewEl = document.getElementById("preview_simple_witness");
     const boxW = previewEl.offsetWidth;
     const boxH = previewEl.offsetHeight;
 
@@ -861,7 +873,7 @@ if (sigWitness) {
     drawW *= factor;
     drawH *= factor;
 
-    page.drawImage(imgWitness, {
+    page.drawImage(img_Simple_Witness, {
       x: posX,
       y: posY,
       width: drawW,
@@ -874,13 +886,13 @@ if (sigWitness) {
 
 
 // Trustee signature FillPDF
-const sigTrustee = localStorage.getItem("sig_trustee");
-if (sigTrustee) {
+const sig_Simple_Assignee = localStorage.getItem("sig_simple_assignee");
+if (sig_Simple_Assignee) {
   try {
-    const imgTrustee = await pdfDoc.embedPng(sigTrustee);
-    const { width, height } = imgTrustee.size();
+    const img_Simple_Assignee = await pdfDoc.embedPng(sig_Simple_Assignee);
+    const { width, height } = img_Simple_Assignee.size();
 
-    const previewEl = document.getElementById("preview_trustee");
+    const previewEl = document.getElementById("preview_simple_assignee");
     const boxW = previewEl.offsetWidth;
     const boxH = previewEl.offsetHeight;
 
@@ -895,7 +907,73 @@ if (sigTrustee) {
     drawW *= factor;
     drawH *= factor;
 
-    page.drawImage(imgTrustee, {
+    page.drawImage(img_Simple_Trustee, {
+      x: posX,
+      y: posY,
+      width: drawW,
+      height: drawH
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+    // Oldsig signature FillPDF
+const sig_Simple_Oldsig = localStorage.getItem("sig_simple_oldsig");
+if (sig_Simple_Oldsig) {
+  try {
+    const img_Simple_Oldsig = await pdfDoc.embedPng(sig_Simple_Oldsig);
+    const { width, height } = img_Simple_Oldsig.size();
+
+    const previewEl = document.getElementById("preview_simple_oldsig");
+    const boxW = previewEl.offsetWidth;
+    const boxH = previewEl.offsetHeight;
+
+    const scale = Math.min(boxW / width, boxH / height);
+    let drawW = width * scale;
+    let drawH = height * scale;
+
+    const factor = 0.35;    // % scale
+    const posX = 230;         // X position on PDF
+    const posY = 175;        // Y position on PDF
+
+    drawW *= factor;
+    drawH *= factor;
+
+    page.drawImage(img_Simple_Oldsig, {
+      x: posX,
+      y: posY,
+      width: drawW,
+      height: drawH
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+    // Newsig signature FillPDF
+const sig_Simple_Newsig = localStorage.getItem("sig_simple_newsig");
+if (sig_Simple_Newsig) {
+  try {
+    const img_Simple_Newsig = await pdfDoc.embedPng(sig_Simple_Newsig);
+    const { width, height } = img_Simple_Newsig.size();
+
+    const previewEl = document.getElementById("preview_simple_newsig");
+    const boxW = previewEl.offsetWidth;
+    const boxH = previewEl.offsetHeight;
+
+    const scale = Math.min(boxW / width, boxH / height);
+    let drawW = width * scale;
+    let drawH = height * scale;
+
+    const factor = 0.35;    // % scale
+    const posX = 230;         // X position on PDF
+    const posY = 175;        // Y position on PDF
+
+    drawW *= factor;
+    drawH *= factor;
+
+    page.drawImage(img_Simple_Newsig, {
       x: posX,
       y: posY,
       width: drawW,
@@ -938,7 +1016,7 @@ function resetAll() {
     if (k.startsWith("Nom_")) localStorage.removeItem(k);
   });
   // Legacy sig keys (if you still use these)
-  ["sig_owner","sig_witness","sig_trustee"].forEach(k => localStorage.removeItem(k));
+  ["sig_simple_owner","sig_simple_witness","sig_simple_assignee","sig_simple_oldsig","sig_simple_newsig"].forEach(k => localStorage.removeItem(k));
 
   // 2) Clear the live UI values for Section A/E (inputs that remain in DOM)
   document.querySelectorAll("input, select, textarea").forEach(el => {
@@ -949,9 +1027,11 @@ function resetAll() {
 
 
   // 3) Reset signature previews
-  $("preview_owner").innerHTML   = `<span>Tap to Sign (Policy Owner)</span>`;
-  $("preview_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
-  $("preview_trustee").innerHTML = `<span>Tap to Sign (Trustee)</span>`;
+  $("preview_simple_owner").innerHTML   = `<span>Tap to Sign (Policy Owner)</span>`;
+  $("preview_simple_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
+  $("preview_simple_assignee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
+  $("preview_simple_oldsig").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
+  $("preview_simple_newsig").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
 
   showSaveStatus();
 }
