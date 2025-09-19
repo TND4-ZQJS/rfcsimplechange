@@ -39,6 +39,33 @@
   }
 }
 
+  #scrollTopBtn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #007aff; /* iOS blue */
+  color: #fff;
+  cursor: pointer;
+  display: none; /* hidden by default */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+#scrollTopBtn svg {
+  pointer-events: none; /* icon doesn't block click */
+}
+
+#scrollTopBtn.show {
+  display: flex; /* show with flex centering */
+  opacity: 1;
+}
 
 
   /* Signature preview tiles */
@@ -446,6 +473,12 @@
 </div>
     <div id="saveStatus">Saved</div>
   </section>
+
+  <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="Back to top">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 4.354l-5.146 5.147.708.708L8 5.768l4.438 4.441.708-.708z"/>
+  </svg>
+</button>
 
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
@@ -1110,6 +1143,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+  // Show button when user scrolls down
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("scrollTopBtn");
+  if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
+    btn.classList.add("show");
+  } else {
+    btn.classList.remove("show");
+  }
+});
+
+// Smooth scroll to top
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
   
 </script>
 </main> 
