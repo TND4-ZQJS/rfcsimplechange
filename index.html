@@ -647,6 +647,8 @@ if (target === 'simple_owner') {
   // Next frame: ensure layout settled then resize canvas
   requestAnimationFrame(()=>{
     resizeSigCanvas();
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  
     // If there is an existing signature, draw it to current canvas size
     const existing = localStorage.getItem("sig_"+target);
     if (existing){
