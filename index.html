@@ -1056,30 +1056,27 @@ function resetAll() {
     return;
   }
 
-  // 1) Clear ALL saved keys that belong to this form
-  //    (Everything starting with "Nom_" plus legacy signature keys)
-  const keys = Object.keys(localStorage);
-  keys.forEach(k => {
-    if (k.startsWith("Nom_")) localStorage.removeItem(k);
-  });
-  // Legacy sig keys (if you still use these)
-  ["sig_simple_owner","sig_simple_witness","sig_simple_assignee","sig_simple_oldsig","sig_simple_newsig"].forEach(k => localStorage.removeItem(k));
+  // 1) Clear ALL saved keys
+  localStorage.clear();
 
-  // 2) Clear the live UI values for Section A/E (inputs that remain in DOM)
+  // 2) Clear the live UI values (inputs, checkboxes, radios, selects, textareas)
   document.querySelectorAll("input, select, textarea").forEach(el => {
     if (!el.id) return;
-    if (el.type === "checkbox" || el.type === "radio") el.checked = false;
-    else el.value = "";
+    if (el.type === "checkbox" || el.type === "radio") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
   });
-
 
   // 3) Reset signature previews
   $("preview_simple_owner").innerHTML   = `<span>Tap to Sign (Policy Owner)</span>`;
   $("preview_simple_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
   $("preview_simple_assignee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
-  $("preview_simple_oldsig").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
-  $("preview_simple_newsig").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
+  $("preview_simple_oldsig").innerHTML  = `<span>Tap to Sign (Old Signature)</span>`;
+  $("preview_simple_newsig").innerHTML  = `<span>Tap to Sign (New Signature)</span>`;
 
+  // 4) Update status text if you have it
   showSaveStatus();
 }
 
