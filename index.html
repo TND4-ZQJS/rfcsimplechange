@@ -490,6 +490,36 @@
 /* ---------- CONFIG ---------- */
 const PDF_FILENAME = "Request For Change of Customer Details And Payment Method_LF5188_fillable.pdf";
 
+// ----------------- Section inclusion helper -----------------
+const CONTROLLER_BY_SECTION = {
+  UpdateDetails: "Updatedetails",
+  ChangePaymentModeSection: "Changepaymentmode",
+  ChangePaymentMethodSection: "Changepaymentmethod",
+  ChangeSignatureSection: "Changesignature",
+  OtherSection: "Others",
+  UpdateInsuredDetails: "Simple_Update_Insured",
+  UpdatePODetails: "Simple_Update_PO",
+  UpdateNomineeDetails: "Simple_Update_Nominee"
+};
+
+// Returns true if a DOM input (by id) should be exported to the PDF.
+// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
+// that is currently UNchecked, returns false (skip).
+function shouldIncludeFieldByUI(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return true; // if element isn't present in DOM, include by default
+  let parent = el;
+  while (parent && parent !== document.body) {
+    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
+      const controllerId = CONTROLLER_BY_SECTION[parent.id];
+      const cb = document.getElementById(controllerId);
+      if (cb && !cb.checked) return false; // section unticked → skip
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+}
+
 /* ---SAVE STATUS + LOCALSTORAGE (Text, Checkbox, Dropdown) ---------- */
 const saveStatusEl = document.getElementById("saveStatus");
 
@@ -584,7 +614,7 @@ function safeSetField(form, fieldName, value) {
       }
       return;
     } catch (e) {}
-
+    
     // radio
     try {
       field = form.getRadioGroup(fieldName);
@@ -769,50 +799,56 @@ async function fillPDF(){
 
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
 // helper to map a radio group (saved under groupName) to a list of PDF checkbox field names
-function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames) {
-  const selectedId = localStorage.getItem(groupName);
+function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
+  // If controller is provided and it's unticked, clear PDF checkboxes and return
+  if (controllerCheckboxId) {
+    const ctrl = document.getElementById(controllerCheckboxId);
+    if (ctrl && !ctrl.checked) {
+      pdfCheckboxNames.forEach(fieldName => {
+        try { form.getCheckBox(fieldName).uncheck(); } catch (e) {}
+      });
+      return;
+    }
+  }
 
+  // Otherwise set according to saved radio choice
+  const selectedId = localStorage.getItem(groupName);
   pdfCheckboxNames.forEach(fieldName => {
     try {
       const field = form.getCheckBox(fieldName);
-      if (fieldName === selectedId) {
-        field.check();
-      } else {
-        field.uncheck();
-      }
+      if (fieldName === selectedId) field.check();
+      else field.uncheck();
     } catch (e) {
       console.warn(`Checkbox field ${fieldName} not found in PDF`);
     }
   });
 }
     
-// Payment Mode option (UI name: "Paymentmodetype")
+// replace your previous calls with these:
 mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
   "Simple_Payment_Annual",
   "Simple_Payment_SemiAnnual",
   "Simple_Payment_Quarterly",
   "Simple_Payment_Monthly"
-]);
+], "Changepaymentmode");
 
-// Payment Method option (UI name: "Paymentmethodtype")
 mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
   "Simple_Payment_FPX",
   "Simple_Payment_Internet"
-]);
+], "Changepaymentmethod");
 
-// Change Signature Role type (UI name: "Changesignature")
 mapRadioGroupToPdfCheckboxes("Changesignature", [
   "Simple_ChangeSig_Insured",
   "Simple_ChangeSig_Assignee",
   "Simple_ChangeSig_PO",
   "Simple_ChangeSig_Trustee"
-]);
+], "Changesignature");
 /* ===== end mapping ===== */
 
  
 
     // FILL FORM FIELDS FROM LOCALSTORAGE HERE
-[
+const fieldNames = [
   "Simple_BasicInfo_InsuredName",
   "Simple_BasicInfo_PolicyNo",
   "Simple_BasicInfo_InsuredNIRC",
@@ -858,10 +894,15 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
   "Simple_SignWitness_Name",
   "Simple_SignWitness_NIRC",
   "Simple_SignWitness_Mobile"
-].forEach(fieldName => {
-  safeSetField(form, fieldName, localStorage.getItem(fieldName));
-});
+];
 
+fieldNames.forEach(fieldName => {
+  // If the UI section containing this field is currently unticked, skip it.
+  if (!shouldIncludeFieldByUI(fieldName)) return;
+
+  const value = localStorage.getItem(fieldName);
+  safeSetField(form, fieldName, value);
+});
     
     /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
 
