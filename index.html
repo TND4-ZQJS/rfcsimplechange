@@ -566,9 +566,15 @@ function autoBindSave(el) {
     });
 } else {
   el.addEventListener("input", () => {
-    if (el.id !== "MHSE_Info_POEmail") { //except Email
-      el.value = el.value.toUpperCase();   // update textbox itself
+    const s = el.selectionStart;
+    const e = el.selectionEnd;
+
+    if (el.id !== "MHSE_Info_POEmail") {
+      el.value = el.value.toUpperCase();
     }
+
+    el.setSelectionRange(s, e);   // ← KEY FIX
+
     localStorage.setItem(el.id, el.value);
     showSaveStatus();
   });
