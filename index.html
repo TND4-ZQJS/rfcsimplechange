@@ -1,18 +1,203 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Request For Change of Customer Details and Payment Method</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Filler - CI Pro Universe</title>
 <style>
-  :root{
-    --bg:#f6f7f9; --card:#fff; --accent:#007aff; --muted:#666; --line:#e9e9ee;
-  }
-  *{box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;margin:18px;background:var(--bg);color:#111}
-  main{max-width:980px;margin:0 auto;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,0.06)}
-  h1{margin:15px 0 35px 0;font-size:1.50rem}
-  .section{background:#fbfbfd;border:1px solid #eee;padding:14px;border-radius:10px;margin:12px 0}
+/* ============================================================
+   GLOBAL DESIGN VARIABLES (Unified Workspace Framework)
+   ============================================================ */
+*, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+:root {
+    --nav-height: 52px;
+    --accent: #0071e3;
+    --bg: #f5f5f7;       /* Clean gray workspace canvas background */
+    --surface: #ffffff;  /* Card surface background */
+    --text-primary: #1d1d1f;
+    --text-secondary: #515154;
+    --text-tertiary: #86868b;
+    --border: rgba(0, 0, 0, 0.06);
+    --line: #e9e9ee;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 940px;
+    margin: 40px auto;
+    padding: 0 24px 100px;
+}
+
+/* ============================================================
+   STICKY STYLISH NAVBAR STRUCTURE
+   ============================================================ */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    height: var(--nav-height);
+}
+
+.nav-container {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-item {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.nav-item:hover { 
+    background: rgba(0,0,0,0.05); 
+    color: var(--text-primary); 
+}
+
+.nav-item.active { 
+    background: rgba(0,113,227,0.08); 
+    color: var(--accent); 
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 6px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+@media (max-width: 700px) {
+    .menu-toggle { display: flex; }
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: var(--nav-height);
+        left: 0; right: 0;
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 12px 16px 20px;
+        gap: 2px;
+        border-bottom: 1px solid var(--border);
+    }
+    .nav-menu.show { display: flex; }
+    .nav-item { width: 100%; padding: 10px 14px; }
+}
+
+/* Security Box */
+.security {
+    padding: 60px 0;
+}
+
+.security-box {
+    background-color: transparent;
+    border-left: 3px solid #86868b;
+    padding: 16px 24px;
+    font-size: 14px;
+    color: #6e6e73;
+}       
+
+/* Footer */
+.footer {
+    padding: 40px 24px;
+    text-align: center;
+    font-size: 12px;
+    color: #86868b;
+    border-top: 1px solid #e8e8ed;
+}    
+
+/* Hero Section */
+.hero {
+    padding-top: 140px;
+    padding-bottom: 80px;
+    text-align: center;
+}
+
+.badge {
+    font-size: 20px;
+    font-weight: 600;
+    color: #bf4800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: #1d1d1f;
+}
+
+.subtitle {
+    font-size: 19px;
+    color: #86868b;
+    max-width: 640px;
+    margin: 0 auto;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}    
+
+/* ============================================================
+   FILLER WORKSPACE COMPONENT STYLES
+   ============================================================ */
+.section{background:#fbfbfd;border:1px solid #eee;padding:14px;border-radius:10px;margin:12px 0}
   .section h2{margin:0 0 10px 0;font-size:1.05rem}
   label{display:block;margin:8px 0;font-size:0.95rem}
   .info-label {font-weight: bold;}
@@ -94,6 +279,20 @@
   .preview{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px}
   .preview canvas{width:100%;height:auto;border-radius:8px}
 
+ /* ============================================================
+    PREMIUM iOS BACK NAVIGATION ENGINE (Optimized)
+   ============================================================ */
+.back-navigation-container {max-width: 940px;margin: 20px auto 0 auto;padding: 0 24px;display: flex;align-items: center;}
+a.back-link,
+a.back-link span {text-decoration: none !important;text-decoration-line: none !important;border-bottom: none !important;box-shadow: none !important;outline: none !important;}
+a.back-link {display: inline-flex;align-items: center;gap: 2px;color:#007aff; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;font-weight: 400;letter-spacing: -0.3px;transition: opacity 0.15s ease;cursor: pointer;-webkit-user-select: none;user-select: none;}
+a.back-link:hover {opacity: 0.7;}
+a.back-link:active {opacity: 0.3;}
+a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff !important;fill: none; /* Ensures vector shapes don't accidentally bloat */}
+   
+
   /* Save indicator */
   #saveStatus{
     position:fixed; top:12px; right:12px; background:var(--accent); color:#fff;
@@ -104,12 +303,39 @@
     .policy-grid{grid-template-columns:1fr}
   }
 </style>
+
 </head>
 <body>
-<main>
-  <h1>Request For Change of Customer Details and Payment Method (LF5188)</h1>
 
-  <!-- SECTION: Policy Info -->
+    <!-- Global Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <span class="logo" onclick="window.location.href='../dashboard.html'">CI Pro Universe</span>
+            <div class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-item active">TND4 Operation Centre</a>
+            </nav>
+        </div>
+    </header>
+
+<div class="back-navigation-container">
+    <a href="#" id="backToMainLink" class="back-link" aria-label="Go back to previous page" role="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+    </a>
+</div>    
+
+<main class="container">
+
+      <section class="hero" style="padding-top: 0px; padding-bottom: 20px; text-align: left;">
+            <span class="badge">Request for Change of Customer Details and Payment Method</span>
+        </section>
+
+<!-- SECTION: Policy Info -->
   <section class="section">
     <h2>Policy Information</h2>
 
@@ -170,85 +396,85 @@
        <section class="section" id="UpdateInsuredDetails">
     <h3>Insured - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_Name" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredName" type="text" placeholder="Enter insured's name">
+      <label class="inline"><input class="persist" id="Simple_Update_InsuredName" type="checkbox">Name</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredName_Text" type="text" placeholder="Enter insured's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_DOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredDOB" type="text" placeholder="Enter insured's DOB">
+      <label class="inline"><input class="persist" id="Simple_Update_InsuredDOB" type="checkbox">Date of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredDOB_Text" type="text" placeholder="Enter insured's DOB">
         </div>
           <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNIRC" type="text" placeholder="Enter insured's IC/BC/Passport">
+      <label class="inline"><input class="persist" id="Simple_Update_InsuredNIRC" type="checkbox">IC/BC/Passport No.</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNIRC_Text" type="text" placeholder="Enter insured's IC/BC/Passport">
         </div>
         <div class="row">
           <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_Sex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredSex" type="text" placeholder="Enter insured's sex">
+      <label class="inline"><input class="persist" id="Simple_Update_InsuredSex" type="checkbox">Sex</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredSex_Text" type="text" placeholder="Enter insured's sex">
         </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Country" type="checkbox">Country of Birth</label>
-         <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredCountry" type="text" placeholder="Enter insured's Country of Birth">
+         <label class="inline"><input class="persist" id="Simple_Update_InsuredCountry" type="checkbox">Country of Birth</label>
+         <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredCountry_Text" type="text" placeholder="Enter insured's Country of Birth">
          </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Nationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNationality" type="text" placeholder="Enter insured's nationality">
+         <label class="inline"><input class="persist" id="Simple_Update_InsuredNationality" type="checkbox">Nationality</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNationality_Text" type="text" placeholder="Enter insured's nationality">
          </div>
     </section>
 
         <section class="section" id="UpdatePODetails">
     <h3>Policy Owner - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_Name" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POName" type="text" placeholder="Enter policy owner's name">
+      <label class="inline"><input class="persist" id="Simple_Update_POName" type="checkbox">Name</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POName_Text" type="text" placeholder="Enter policy owner's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_DOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PODOB" type="text" placeholder="Enter policy owner's DOB">
+      <label class="inline"><input class="persist" id="Simple_Update_PODOB" type="checkbox">Date of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PODOB_Text" type="text" placeholder="Enter policy owner's DOB">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONIRC" type="text" placeholder="Enter policy owner's IC/BC/Passport">
+      <label class="inline"><input class="persist" id="Simple_Update_PONIRC" type="checkbox">IC/BC/Passport No.</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONIRC_Text" type="text" placeholder="Enter policy owner's IC/BC/Passport">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_Sex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POSex" type="text" placeholder="Enter policy owner's sex">
+      <label class="inline"><input class="persist" id="Simple_Update_POSex" type="checkbox">Sex</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POSex_Text" type="text" placeholder="Enter policy owner's sex">
         </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Country" type="checkbox">Country of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POCountry" type="text" placeholder="Enter policy owner's Country of Birth">
+         <label class="inline"><input class="persist" id="Simple_Update_POCountry" type="checkbox">Country of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POCountry_Text" type="text" placeholder="Enter policy owner's Country of Birth">
          </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Nationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONationality" type="text" placeholder="Enter policy owner's nationality">
+         <label class="inline"><input class="persist" id="Simple_Update_PONationality" type="checkbox">Nationality</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONationality_Text" type="text" placeholder="Enter policy owner's nationality">
          </div>
     </section>
 
         <section class="section" id="UpdateNomineeDetails">
     <h3>Nominee/Trustee/Assignee - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_Name" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeName" type="text" placeholder="Enter nominee/trustee/assignee's name">
+      <label class="inline"><input class="persist" id="Simple_Update_NomineeName" type="checkbox">Name</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeName_Text" type="text" placeholder="Enter nominee/trustee/assignee's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_DOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeDOB" type="text" placeholder="Enter nominee/trustee/assignee's DOB">
+      <label class="inline"><input class="persist" id="Simple_Update_NomineeDOB" type="checkbox">Date of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeDOB_Text" type="text" placeholder="Enter nominee/trustee/assignee's DOB">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNIRC" type="text" placeholder="Enter nominee/trustee/assignee's IC/BC/Passport">
+      <label class="inline"><input class="persist" id="Simple_Update_NomineeNIRC" type="checkbox">IC/BC/Passport No.</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNIRC_Text" type="text" placeholder="Enter nominee/trustee/assignee's IC/BC/Passport">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_Sex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeSex" type="text" placeholder="Enter nominee/trustee/assignee's sex">
+      <label class="inline"><input class="persist" id="Simple_Update_NomineeSex" type="checkbox">Sex</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeSex_Text" type="text" placeholder="Enter nominee/trustee/assignee's sex">
         </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Country" type="checkbox">Country of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeCountry" type="text" placeholder="Enter nominee/trustee/assignee's Country of Birth">
+         <label class="inline"><input class="persist" id="Simple_Update_NomineeCountry" type="checkbox">Country of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeCountry_Text" type="text" placeholder="Enter nominee/trustee/assignee's Country of Birth">
          </div>
          <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_Nationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNationality" type="text" placeholder="Enter nominee/trustee/assignee's nationality">
+         <label class="inline"><input class="persist" id="Simple_Update_NomineeNationality" type="checkbox">Nationality</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNationality_Text" type="text" placeholder="Enter nominee/trustee/assignee's nationality">
          </div>
     </section>
 
@@ -386,6 +612,12 @@
   <!-- SECTION: Owner/Policyowner Signature -->
   <section class="section">
     <h2>Signature of Policy Owner</h2>
+      <div class="row">
+      <label>
+      <input type="checkbox" id="same_as_insured"> Policyowner is same as Insured
+      </label>
+    </div>
+    
     <div class="row">
       <label style="flex:1">Name of Policyowner
         <input id="Simple_SignPO_Name" class="persist" type="text" placeholder="Enter name">
@@ -480,6 +712,7 @@
   </svg>
 </button>
 
+    
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
 
@@ -489,6 +722,36 @@
   
 /* ---------- CONFIG ---------- */
 const PDF_FILENAME = "Request For Change of Customer Details And Payment Method_LF5188_fillable.pdf";
+
+// ----------------- Section inclusion helper -----------------
+const CONTROLLER_BY_SECTION = {
+  UpdateDetails: "Updatedetails",
+  ChangePaymentModeSection: "Changepaymentmode",
+  ChangePaymentMethodSection: "Changepaymentmethod",
+  ChangeSignatureSection: "Changesignature",
+  OtherSection: "Others",
+  UpdateInsuredDetails: "Simple_Update_Insured",
+  UpdatePODetails: "Simple_Update_PO",
+  UpdateNomineeDetails: "Simple_Update_Nominee"
+};
+
+// Returns true if a DOM input (by id) should be exported to the PDF.
+// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
+// that is currently UNchecked, returns false (skip).
+function shouldIncludeFieldByUI(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return true; // if element isn't present in DOM, include by default
+  let parent = el;
+  while (parent && parent !== document.body) {
+    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
+      const controllerId = CONTROLLER_BY_SECTION[parent.id];
+      const cb = document.getElementById(controllerId);
+      if (cb && !cb.checked) return false; // section unticked → skip
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+}
 
 /* ---SAVE STATUS + LOCALSTORAGE (Text, Checkbox, Dropdown) ---------- */
 const saveStatusEl = document.getElementById("saveStatus");
@@ -584,7 +847,7 @@ function safeSetField(form, fieldName, value) {
       }
       return;
     } catch (e) {}
-
+    
     // radio
     try {
       field = form.getRadioGroup(fieldName);
@@ -595,6 +858,46 @@ function safeSetField(form, fieldName, value) {
     console.warn(`Field ${fieldName} not found in PDF`);
   } catch (err) {
     console.error(`Error setting field ${fieldName}`, err);
+  }
+}
+
+// Helper to map multiple role checkboxes → one shared PDF checkbox
+function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
+  // **NEW LOGIC: Check if the main 'Update Customer Details' section is enabled**
+  const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
+  if (!updateDetailsEnabled) {
+      try {
+          // If the main section is unticked, force the shared PDF checkbox to uncheck.
+          pdfDoc.getForm().getCheckBox(pdfFieldName).uncheck();
+      } catch (e) {}
+      return; // Stop here, don't check child elements
+  }
+
+  // OLD LOGIC: Only proceed if the main parent section is ticked
+// NEW LOGIC: Only proceed if the main parent section is ticked
+const anyChecked = htmlIds.some(id => {
+  const el = document.getElementById(id);
+  
+  // Determine the controlling Role checkbox ID based on the element ID
+  let roleControllerId;
+  if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
+  else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
+  else if (id.includes("Nominee")) roleControllerId = "Simple_Update_Nominee";
+  
+  const roleController = document.getElementById(roleControllerId);
+
+  // A shared field is considered checked ONLY IF:
+  // 1. The individual detail checkbox is checked (el.checked)
+  // 2. The corresponding Role checkbox is checked (roleController?.checked)
+  return el && el.checked && roleController && roleController.checked;
+});
+  
+  try {
+    const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
+    if (anyChecked) field.check();
+    else field.uncheck();
+  } catch (e) {
+    console.warn(`PDF checkbox ${pdfFieldName} not found`);
   }
 }
 
@@ -647,6 +950,8 @@ if (target === 'simple_owner') {
   // Next frame: ensure layout settled then resize canvas
   requestAnimationFrame(()=>{
     resizeSigCanvas();
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  
     // If there is an existing signature, draw it to current canvas size
     const existing = localStorage.getItem("sig_"+target);
     if (existing){
@@ -749,6 +1054,43 @@ window.addEventListener("DOMContentLoaded", ()=>{
     if(saved){ $("preview_simple_"+role).innerHTML = `<img alt="Signature ${role}" src="${saved}">`; }
   });
 });
+
+// Policyowner Same As Insured checkbox logic
+document.getElementById('same_as_insured').addEventListener('change', function() {
+    // Get the source elements (Insured)
+    const insuredName = document.getElementById('Simple_BasicInfo_InsuredName');
+    const insuredIC = document.getElementById('Simple_BasicInfo_InsuredNIRC');
+    
+    // Get the target elements (Policyowner)
+    const poName = document.getElementById('Simple_SignPO_Name');
+    const poIC = document.getElementById('Simple_SignPO_NIRC');
+
+    if (this.checked) {
+        // 1. Copy the values
+        poName.value = insuredName.value;
+        poIC.value = insuredIC.value;
+        
+        // 2. Lock the fields
+        poName.readOnly = true;
+        poIC.readOnly = true;
+
+        // 3. FORCE SAVE TO LOCAL STORAGE
+        // Manually trigger 'input' so the persistence script detects the change
+        poName.dispatchEvent(new Event('input', { bubbles: true }));
+        poIC.dispatchEvent(new Event('input', { bubbles: true }));
+
+    } else {
+        // Clear values and allow editing if unticked
+        poName.value = "";
+        poIC.value = "";
+        poName.readOnly = false;
+        poIC.readOnly = false;
+
+        // Force save the "empty" state as well
+        poName.dispatchEvent(new Event('input', { bubbles: true }));
+        poIC.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+});
   
 
 /* ---------- GENERATE PDF ---------- */
@@ -767,56 +1109,63 @@ async function fillPDF(){
 
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
 // helper to map a radio group (saved under groupName) to a list of PDF checkbox field names
-function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames) {
-  const selectedId = localStorage.getItem(groupName);
+function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
+  // If controller is provided and it's unticked, clear PDF checkboxes and return
+  if (controllerCheckboxId) {
+    const ctrl = document.getElementById(controllerCheckboxId);
+    if (ctrl && !ctrl.checked) {
+      pdfCheckboxNames.forEach(fieldName => {
+        try { form.getCheckBox(fieldName).uncheck(); } catch (e) {}
+      });
+      return;
+    }
+  }
 
+  
+  // Otherwise set according to saved radio choice
+  const selectedId = localStorage.getItem(groupName);
   pdfCheckboxNames.forEach(fieldName => {
     try {
       const field = form.getCheckBox(fieldName);
-      if (fieldName === selectedId) {
-        field.check();
-      } else {
-        field.uncheck();
-      }
+      if (fieldName === selectedId) field.check();
+      else field.uncheck();
     } catch (e) {
       console.warn(`Checkbox field ${fieldName} not found in PDF`);
     }
   });
 }
     
-// Payment Mode option (UI name: "Paymentmodetype")
+// replace your previous calls with these:
 mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
   "Simple_Payment_Annual",
   "Simple_Payment_SemiAnnual",
   "Simple_Payment_Quarterly",
   "Simple_Payment_Monthly"
-]);
+], "Changepaymentmode");
 
-// Payment Method option (UI name: "Paymentmethodtype")
 mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
   "Simple_Payment_FPX",
   "Simple_Payment_Internet"
-]);
+], "Changepaymentmethod");
 
-// Change Signature Role type (UI name: "Changesignature")
 mapRadioGroupToPdfCheckboxes("Changesignature", [
   "Simple_ChangeSig_Insured",
   "Simple_ChangeSig_Assignee",
   "Simple_ChangeSig_PO",
   "Simple_ChangeSig_Trustee"
-]);
+], "Changesignature");
 /* ===== end mapping ===== */
 
  
 
     // FILL FORM FIELDS FROM LOCALSTORAGE HERE
-[
+const fieldNames = [
   "Simple_BasicInfo_InsuredName",
   "Simple_BasicInfo_PolicyNo",
   "Simple_BasicInfo_InsuredNIRC",
   "Simple_Update_Name",
   "Simple_Update_Insured",
-  "Simple_Update_InsuredName",
+  "Simple_Update_InsuredName_Text",
   "Simple_Update_DOB",
   "Simple_Update_PO",
   "Simple_Update_Nominee",
@@ -824,23 +1173,23 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
   "Simple_Update_Sex",
   "Simple_Update_Country",
   "Simple_Update_Nationality",
-  "Simple_Update_InsuredDOB",
-  "Simple_Update_InsuredNIRC",
-  "Simple_Update_InsuredSex",
-  "Simple_Update_InsuredCountry",
-  "Simple_Update_InsuredNationality",
-  "Simple_Update_POName",
-  "Simple_Update_PODOB",
-  "Simple_Update_PONIRC", 
-  "Simple_Update_POSex", 
-  "Simple_Update_POCountry",
-  "Simple_Update_PONationality",
-  "Simple_Update_NomineeName",
-  "Simple_Update_NomineeDOB",
-  "Simple_Update_NomineeNIRC",
-  "Simple_Update_NomineeSex",
-  "Simple_Update_NomineeCountry",
-  "Simple_Update_NomineeNationality",
+  "Simple_Update_InsuredDOB_Text",
+  "Simple_Update_InsuredNIRC_Text",
+  "Simple_Update_InsuredSex_Text",
+  "Simple_Update_InsuredCountry_Text",
+  "Simple_Update_InsuredNationality_Text",
+  "Simple_Update_POName_Text",
+  "Simple_Update_PODOB_Text",
+  "Simple_Update_PONIRC_Text", 
+  "Simple_Update_POSex_Text", 
+  "Simple_Update_POCountry_Text",
+  "Simple_Update_PONationality_Text",
+  "Simple_Update_NomineeName_Text",
+  "Simple_Update_NomineeDOB_Text",
+  "Simple_Update_NomineeNIRC_Text",
+  "Simple_Update_NomineeSex_Text",
+  "Simple_Update_NomineeCountry_Text",
+  "Simple_Update_NomineeNationality_Text",
   "Simple_Update_Others_Line1",
   "Simple_Update_Others_Line2",
   "Simple_Update_Others_Line3",
@@ -856,10 +1205,52 @@ mapRadioGroupToPdfCheckboxes("Changesignature", [
   "Simple_SignWitness_Name",
   "Simple_SignWitness_NIRC",
   "Simple_SignWitness_Mobile"
-].forEach(fieldName => {
-  safeSetField(form, fieldName, localStorage.getItem(fieldName));
+];
+
+fieldNames.forEach(fieldName => {
+  // If the UI section containing this field is currently unticked, skip it.
+  if (!shouldIncludeFieldByUI(fieldName)) return;
+
+  const value = localStorage.getItem(fieldName);
+  safeSetField(form, fieldName, value);
 });
 
+  // --- Shared checkboxes for Insured / PO / Nominee ---
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
+  "Simple_Update_InsuredName",
+  "Simple_Update_POName",
+  "Simple_Update_NomineeName"
+]);
+
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
+  "Simple_Update_InsuredDOB",
+  "Simple_Update_PODOB",
+  "Simple_Update_NomineeDOB"
+]);
+
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
+  "Simple_Update_InsuredNIRC",
+  "Simple_Update_PONIRC",
+  "Simple_Update_NomineeNIRC"
+]);
+
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
+  "Simple_Update_InsuredSex",
+  "Simple_Update_POSex",
+  "Simple_Update_NomineeSex"
+]);
+
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
+  "Simple_Update_InsuredCountry",
+  "Simple_Update_POCountry",
+  "Simple_Update_NomineeCountry"
+]);
+
+mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
+  "Simple_Update_InsuredNationality",
+  "Simple_Update_PONationality",
+  "Simple_Update_NomineeNationality"
+]);
     
     /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
 
@@ -1032,20 +1423,43 @@ if (sig_Simple_Newsig) {
     // Flatten form fields before saving
     form.flatten();
     
-    // Save & download FillPDF
+        // Save & download FillPDF
     const pdfBytes = await pdfDoc.save();
+
+    // 1. Get Policy Number and handle naming
+    const policyInput = document.getElementById('Simple_BasicInfo_PolicyNo');
+    let policyNum = "NEW";
+    
+    if (policyInput && policyInput.value.trim() !== "") {
+        // Remove special characters that aren't allowed in filenames
+        policyNum = policyInput.value.trim().replace(/[^a-z0-9]/gi, '_');
+    }
+
+    const finalFileName = `${policyNum}_RFC_Simple_Change.pdf`;
+
+    // 2. Trigger Download
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "Filled_RFC_Simple_Change.pdf"; document.body.appendChild(a); a.click(); a.remove();
+    const a = document.createElement("a"); 
+    
+    a.href = url; 
+    a.download = finalFileName; // Dynamic name applied here
+    
+    document.body.appendChild(a); 
+    a.click(); 
+    a.remove();
+    
     setTimeout(()=> URL.revokeObjectURL(url), 2500);
 
   } catch(err){
     alert("PDF generation failed: " + (err.message || err));
     console.error(err);
   } finally {
+    // This assumes your $ helper is defined: const $ = id => document.getElementById(id);
     $("generate").disabled = false;
   }
 }
+
 
 
 /* ---------- RESET ALL DATA function ---------- */
@@ -1054,30 +1468,27 @@ function resetAll() {
     return;
   }
 
-  // 1) Clear ALL saved keys that belong to this form
-  //    (Everything starting with "Nom_" plus legacy signature keys)
-  const keys = Object.keys(localStorage);
-  keys.forEach(k => {
-    if (k.startsWith("Nom_")) localStorage.removeItem(k);
-  });
-  // Legacy sig keys (if you still use these)
-  ["sig_simple_owner","sig_simple_witness","sig_simple_assignee","sig_simple_oldsig","sig_simple_newsig"].forEach(k => localStorage.removeItem(k));
+  // 1) Clear ALL saved keys
+  localStorage.clear();
 
-  // 2) Clear the live UI values for Section A/E (inputs that remain in DOM)
+  // 2) Clear the live UI values (inputs, checkboxes, radios, selects, textareas)
   document.querySelectorAll("input, select, textarea").forEach(el => {
     if (!el.id) return;
-    if (el.type === "checkbox" || el.type === "radio") el.checked = false;
-    else el.value = "";
+    if (el.type === "checkbox" || el.type === "radio") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
   });
-
 
   // 3) Reset signature previews
   $("preview_simple_owner").innerHTML   = `<span>Tap to Sign (Policy Owner)</span>`;
   $("preview_simple_witness").innerHTML = `<span>Tap to Sign (Witness)</span>`;
   $("preview_simple_assignee").innerHTML = `<span>Tap to Sign (Assignee)</span>`;
-  $("preview_simple_oldsig").innerHTML = `<span>Tap to Sign (Old Signature)</span>`;
-  $("preview_simple_newsig").innerHTML = `<span>Tap to Sign (New Signature)</span>`;
+  $("preview_simple_oldsig").innerHTML  = `<span>Tap to Sign (Old Signature)</span>`;
+  $("preview_simple_newsig").innerHTML  = `<span>Tap to Sign (New Signature)</span>`;
 
+  // 4) Update status text if you have it
   showSaveStatus();
 }
 
@@ -1158,8 +1569,42 @@ window.addEventListener("scroll", () => {
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-  
-</script>
-</main> 
+
+// iOS-Style Back Navigation Interceptor
+const backToMainLink = document.getElementById("backToMainLink");
+if (backToMainLink) {
+    backToMainLink.addEventListener("click", function(e) {
+        e.preventDefault(); // Always intercept to control the navigation flow cleanly
+        
+        // If the browser has history of a previous page within your system, pop back to it natively
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+            window.history.back();
+        } else {
+            // Secure Fallback: If they opened the form directly in a new tab
+            window.location.href = "dashboard.html";
+        }
+    });
+}
+
+</script>    
+    
+     <!-- Interactive Script for Mobile Navigation Layout Toggle -->
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('navMenu').classList.toggle('show');
+        }
+    </script> 
+
+     <section class="security" style="padding: 50px 0 20px 0;">
+            <div class="security-box">
+                <strong>Secured Session Active:</strong> This platform operates on a static, local-injection framework. We do not store, log, or track any personal details or financial credentials on external servers.
+            </div>
+    </section>      
+</main>
+
+    <footer class="footer">
+        &copy; 2026 CI Pro Universe Portal. All rights reserved. Built for CI Pro operations.
+    </footer>  
+    
 </body>
 </html>
