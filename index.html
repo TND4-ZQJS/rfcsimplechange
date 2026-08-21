@@ -278,6 +278,9 @@ body {
   .preview{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px}
   .preview canvas{width:100%;height:auto;border-radius:8px}
 
+ /* Styling for locked/copied fields */
+  input[readonly] {background: #f2f2f2;color: #555;cursor: not-allowed;border: 1px solid #ddd; outline: none; opacity: 0.8;}
+
  /* Generate PDF Page */
   .action-center {max-width: 800px;margin: 40px auto;padding: 0 20px;box-sizing: border-box;}
   .pdf-grid {display: flex;flex-direction: column;gap: 12px;}
@@ -1227,42 +1230,106 @@ window.addEventListener("DOMContentLoaded", ()=>{
   });
 });
 
-// Policyowner Same As Insured checkbox logic
-document.getElementById('same_as_insured').addEventListener('change', function() {
-    // Get the source elements (Insured)
-    const insuredName = document.getElementById('Simple_BasicInfo_InsuredName');
-    const insuredIC = document.getElementById('Simple_BasicInfo_InsuredNIRC');
-    
-    // Get the target elements (Policyowner)
-    const poName = document.getElementById('Simple_SignPO_Name');
-    const poIC = document.getElementById('Simple_SignPO_NIRC');
+/* ---------- Combined Insured -> Policyowner Sync Helper ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  // Elements
+  const sameAsInsuredCheckbox = document.getElementById("same_as_insured");
 
-    if (this.checked) {
-        // 1. Copy the values
-        poName.value = insuredName.value;
-        poIC.value = insuredIC.value;
-        
-        // 2. Lock the fields
-        poName.readOnly = true;
-        poIC.readOnly = true;
+  // Source Elements (Insured)
+  const insuredName = document.getElementById("Simple_BasicInfo_InsuredName");
+  const insuredIC   = document.getElementById("Simple_BasicInfo_InsuredNIRC");
 
-        // 3. FORCE SAVE TO LOCAL STORAGE
-        // Manually trigger 'input' so the persistence script detects the change
-        poName.dispatchEvent(new Event('input', { bubbles: true }));
-        poIC.dispatchEvent(new Event('input', { bubbles: true }));
+  // Target Elements (Policyowner)
+  const poName = document.getElementById("Simple_SignPO_Name");
+  const poIC   = document.getElementById("Simple_SignPO_NIRC");
 
+  // Helper to safely format value to Uppercase
+  const toUpper = (val) => (val || "").toUpperCase();
+
+  // Helper to update field + localStorage + save status
+  function setAndPersist(el, value) {
+    if (!el) return;
+    el.value = value;
+    localStorage.setItem(el.id, value);
+    if (typeof showSaveStatus === "function") showSaveStatus();
+  }
+
+  // Helper to clear field + remove from localStorage + save status
+  function clearAndRemovePersist(el) {
+    if (!el) return;
+    el.value = "";
+    localStorage.removeItem(el.id);
+    if (typeof showSaveStatus === "function") showSaveStatus();
+  }
+
+  /* --- 1. POLICYOWNER SYNC (Conditional on Checkbox) --- */
+  function syncPOFromInsured() {
+    if (!poName || !poIC || !insuredName || !insuredIC) return;
+    setAndPersist(poName, toUpper(insuredName.value));
+    setAndPersist(poIC, toUpper(insuredIC.value));
+  }
+
+  function clearPOFields() {
+    if (!poName || !poIC) return;
+    clearAndRemovePersist(poName);
+    clearAndRemovePersist(poIC);
+  }
+
+  function setPOLocked(locked) {
+    if (!poName || !poIC) return;
+    poName.readOnly = locked;
+    poIC.readOnly = locked;
+    poName.classList.toggle("dimmed", locked);
+    poIC.classList.toggle("dimmed", locked);
+  }
+
+  function handleSameAsInsuredCheckboxChange() {
+    if (!sameAsInsuredCheckbox) return;
+
+    if (sameAsInsuredCheckbox.checked) {
+      syncPOFromInsured();
+      setPOLocked(true);
     } else {
-        // Clear values and allow editing if unticked
-        poName.value = "";
-        poIC.value = "";
-        poName.readOnly = false;
-        poIC.readOnly = false;
-
-        // Force save the "empty" state as well
-        poName.dispatchEvent(new Event('input', { bubbles: true }));
-        poIC.dispatchEvent(new Event('input', { bubbles: true }));
+      // Clear data & remove from localStorage when unchecked
+      clearPOFields();
+      setPOLocked(false);
     }
+  }
+
+  /* --- 2. EVENT BINDINGS & INITIALIZATION --- */
+  // Live Sync on Insured Typing
+  if (insuredName) {
+    insuredName.addEventListener("input", () => {
+      if (sameAsInsuredCheckbox && sameAsInsuredCheckbox.checked) {
+        syncPOFromInsured();
+      }
+    });
+  }
+
+  if (insuredIC) {
+    insuredIC.addEventListener("input", () => {
+      if (sameAsInsuredCheckbox && sameAsInsuredCheckbox.checked) {
+        syncPOFromInsured();
+      }
+    });
+  }
+
+  // Checkbox Event Listener
+  if (sameAsInsuredCheckbox) {
+    sameAsInsuredCheckbox.addEventListener("change", handleSameAsInsuredCheckboxChange);
+  }
+
+  // Initial Sync on Page Load
+  setTimeout(() => {
+    if (sameAsInsuredCheckbox && sameAsInsuredCheckbox.checked) {
+      syncPOFromInsured();
+      setPOLocked(true);
+    } else {
+      setPOLocked(false);
+    }
+  }, 50);
 });
+
   
 
 /* ---------- GENERATE PDF ---------- */
