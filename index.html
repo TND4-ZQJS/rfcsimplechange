@@ -682,6 +682,11 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
         </select>
       </label>
     </div>
+
+      <div class="row">
+  <button type="button" class="btn-set-today ghost" onclick="setSignedDateToday()">Today</button>
+</div>
+      
   </section>
 
   <!-- SECTION: Owner/Policyowner Signature -->
@@ -1000,6 +1005,63 @@ const anyChecked = htmlIds.some(id => {
     else field.uncheck();
   } catch (e) {
     console.warn(`PDF checkbox ${pdfFieldName} not found`);
+  }
+}
+
+/* ---------- Date Set Today Button ---------- */  
+function setSignedDateToday() {
+  const now = new Date();
+
+  // 1. Format Day (e.g., 5 -> "05")
+  const dayStr = String(now.getDate()).padStart(2, '0');
+
+  // 2. Format Month string matching select options
+  const monthNames = [
+    "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+    "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+  ];
+  const monthStr = monthNames[now.getMonth()];
+
+  // 3. Format Year (e.g., "2026")
+  const yearStr = String(now.getFullYear());
+
+  // 4. Target elements
+  const daySelect = document.getElementById('Simple_SignDay');
+  const monthSelect = document.getElementById('Simple_SignMonth');
+  const yearSelect = document.getElementById('Simple_SignYear');
+
+  if (daySelect && monthSelect && yearSelect) {
+    // Set values
+    daySelect.value = dayStr;
+    monthSelect.value = monthStr;
+    yearSelect.value = yearStr;
+
+    // Dispatch change event to trigger local storage auto-save listeners if present
+    daySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    monthSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    yearSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+    // Explicitly write to localStorage if you store form fields by ID directly
+    saveToLocalStorage('Simple_SignDay', dayStr);
+    saveToLocalStorage('Simple_SignMonth', monthStr);
+    saveToLocalStorage('Simple_SignYear', yearStr);
+  }
+}
+
+// Helper function for local storage persistence
+function saveToLocalStorage(id, value) {
+  try {
+    // If you use a single object key for form data, adapt this accordingly
+    localStorage.setItem(id, value);
+    
+    // Optional: trigger your save indicator toast if you have one
+    const saveStatus = document.getElementById('saveStatus');
+    if (saveStatus) {
+      saveStatus.style.opacity = '1';
+      setTimeout(() => { saveStatus.style.opacity = '0'; }, 1500);
+    }
+  } catch (e) {
+    console.error('Failed to save to localStorage:', e);
   }
 }
 
