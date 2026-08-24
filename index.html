@@ -422,6 +422,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 
 <div class="wizard-step"><!-- STEP 2: Person -->
   <section class="section">
+    <h2>Insured Details</h2>
     <div class="row">
       <label style="flex:1">Insured's Name
         <input id="Simple_BasicInfo_InsuredName" class="persist" type="text" placeholder="Enter name">
@@ -435,7 +436,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </section>
 
     <section class="section">
-<h2>Signature of Policy Owner</h2>
+<h2>Policy Owner Details</h2>
       <div class="row">
       <label>
       <input type="checkbox" id="same_as_insured"> Policyowner is same as Insured
@@ -453,6 +454,25 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </label>
     </div>
     </section>
+
+    <section class="section">
+<h2>Witness Details</h2>
+     <div class="row">
+      <label style="flex:1">Name of Witness
+        <input id="Simple_SignWitness_Name" class="persist" type="text" placeholder="Enter name">
+      </label>
+    </div>
+    <div class="row">
+      <label style="flex:1">IC No.
+        <input id="Simple_SignWitness_NIRC" class="persist" type="text" placeholder="e.g. 800202-08-5678">
+      </label>
+      <label style="flex:1">Mobile No.
+        <input id="Simple_SignWitness_Mobile" class="persist" type="text" placeholder="e.g. 012-23456789">
+      </label>
+    </div>
+
+    </section>
+    
   </div><!-- (End) STEP 2: Person -->
 
 <div class="wizard-step"><!-- STEP 3: Options -->
@@ -716,7 +736,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 
   <!-- SECTION: Owner/Policyowner Signature -->
   <section class="section">
-    
+    <h2>Signature of Policyowner</h2>
 
         <div class="sig-preview" id="preview_simple_owner" onclick="openSig('simple_owner')">
       <span>Tap to Sign (Policyowner)</span>
@@ -729,19 +749,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   <!-- SECTION: Witness Signature -->
   <section class="section">
     <h2>Signature of Witness</h2>
-    <div class="row">
-      <label style="flex:1">Name of Witness
-        <input id="Simple_SignWitness_Name" class="persist" type="text" placeholder="Enter name">
-      </label>
-    </div>
-    <div class="row">
-      <label style="flex:1">IC No.
-        <input id="Simple_SignWitness_NIRC" class="persist" type="text" placeholder="e.g. 800202-08-5678">
-      </label>
-      <label style="flex:1">Mobile No.
-        <input id="Simple_SignWitness_Mobile" class="persist" type="text" placeholder="e.g. 012-23456789">
-      </label>
-    </div>
 
     <div class="sig-preview" id="preview_simple_witness" onclick="openSig('simple_witness')">
       <span>Tap to Sign (Witness)</span>
