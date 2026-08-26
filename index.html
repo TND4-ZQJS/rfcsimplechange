@@ -1429,360 +1429,235 @@ async function fillPDF(){
     const pdfDoc = await PDFLib.PDFDocument.load(bytes);
     const form = pdfDoc.getForm();
 
+    // Embed standard Helvetica to write explicit font appearance baselines (fixes iOS/Safari clipping)
+    const customFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
     const pages = pdfDoc.getPages();
     const page = pages[1]; // use 2nd page
 
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
-// helper to map a radio group (saved under groupName) to a list of PDF checkbox field names
-function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
-  // If controller is provided and it's unticked, clear PDF checkboxes and return
-  if (controllerCheckboxId) {
-    const ctrl = document.getElementById(controllerCheckboxId);
-    if (ctrl && !ctrl.checked) {
+    function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
+      if (controllerCheckboxId) {
+        const ctrl = document.getElementById(controllerCheckboxId);
+        if (ctrl && !ctrl.checked) {
+          pdfCheckboxNames.forEach(fieldName => {
+            try { form.getCheckBox(fieldName).uncheck(); } catch (e) {}
+          });
+          return;
+        }
+      }
+
+      const selectedId = localStorage.getItem(groupName);
       pdfCheckboxNames.forEach(fieldName => {
-        try { form.getCheckBox(fieldName).uncheck(); } catch (e) {}
+        try {
+          const field = form.getCheckBox(fieldName);
+          if (fieldName === selectedId) field.check();
+          else field.uncheck();
+        } catch (e) {
+          console.warn(`Checkbox field ${fieldName} not found in PDF`);
+        }
       });
-      return;
     }
-  }
+        
+    mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
+      "Simple_Payment_Annual",
+      "Simple_Payment_SemiAnnual",
+      "Simple_Payment_Quarterly",
+      "Simple_Payment_Monthly"
+    ], "Changepaymentmode");
 
-  
-  // Otherwise set according to saved radio choice
-  const selectedId = localStorage.getItem(groupName);
-  pdfCheckboxNames.forEach(fieldName => {
-    try {
-      const field = form.getCheckBox(fieldName);
-      if (fieldName === selectedId) field.check();
-      else field.uncheck();
-    } catch (e) {
-      console.warn(`Checkbox field ${fieldName} not found in PDF`);
-    }
-  });
-}
-    
-// replace your previous calls with these:
-mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
-  "Simple_Payment_Annual",
-  "Simple_Payment_SemiAnnual",
-  "Simple_Payment_Quarterly",
-  "Simple_Payment_Monthly"
-], "Changepaymentmode");
+    mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
+      "Simple_Payment_FPX",
+      "Simple_Payment_Internet"
+    ], "Changepaymentmethod");
 
-mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
-  "Simple_Payment_FPX",
-  "Simple_Payment_Internet"
-], "Changepaymentmethod");
+    mapRadioGroupToPdfCheckboxes("Changesignature", [
+      "Simple_ChangeSig_Insured",
+      "Simple_ChangeSig_Assignee",
+      "Simple_ChangeSig_PO",
+      "Simple_ChangeSig_Trustee"
+    ], "Changesignature");
+    /* ===== end mapping ===== */
 
-mapRadioGroupToPdfCheckboxes("Changesignature", [
-  "Simple_ChangeSig_Insured",
-  "Simple_ChangeSig_Assignee",
-  "Simple_ChangeSig_PO",
-  "Simple_ChangeSig_Trustee"
-], "Changesignature");
-/* ===== end mapping ===== */
+    // Helper: Set text using explicit fixed font sizes to bypass Safari baseline calculation bugs
+    const safeSetFieldFixed = (formRef, fieldName, textValue, fontSize = 9) => {
+      try {
+        const field = formRef.getTextField(fieldName);
+        const val = (textValue || "").toUpperCase();
+        field.setText(val);
+        field.setFontSize(fontSize);
+      } catch (e) {
+        console.warn(`Field ${fieldName} not found or failed to set text:`, e);
+      }
+    };
 
- 
+    // Helper to determine fixed font size based on field type/length
+    const getFontSizeForField = (fieldName) => {
+      // Use 8.5pt for name fields so long names fit without truncation or clipping
+      if (fieldName.includes("Name")) return 8.5;
+      // Use 8pt for longer multi-line/other input fields
+      if (fieldName.includes("Others") || fieldName.includes("Add")) return 8.0;
+      // Default fixed size for NRIC, dates, mobile, policy numbers, etc.
+      return 9.0;
+    };
 
-    // FILL FORM FIELDS FROM LOCALSTORAGE HERE
-const fieldNames = [
-  "Simple_BasicInfo_InsuredName",
-  "Simple_BasicInfo_PolicyNo",
-  "Simple_BasicInfo_InsuredNIRC",
-  "Simple_Update_Name",
-  "Simple_Update_Insured",
-  "Simple_Update_InsuredName_Text",
-  "Simple_Update_DOB",
-  "Simple_Update_PO",
-  "Simple_Update_Nominee",
-  "Simple_Update_NIRC",
-  "Simple_Update_Sex",
-  "Simple_Update_Country",
-  "Simple_Update_Nationality",
-  "Simple_Update_InsuredDOB_Text",
-  "Simple_Update_InsuredNIRC_Text",
-  "Simple_Update_InsuredSex_Text",
-  "Simple_Update_InsuredCountry_Text",
-  "Simple_Update_InsuredNationality_Text",
-  "Simple_Update_POName_Text",
-  "Simple_Update_PODOB_Text",
-  "Simple_Update_PONIRC_Text", 
-  "Simple_Update_POSex_Text", 
-  "Simple_Update_POCountry_Text",
-  "Simple_Update_PONationality_Text",
-  "Simple_Update_NomineeName_Text",
-  "Simple_Update_NomineeDOB_Text",
-  "Simple_Update_NomineeNIRC_Text",
-  "Simple_Update_NomineeSex_Text",
-  "Simple_Update_NomineeCountry_Text",
-  "Simple_Update_NomineeNationality_Text",
-  "Simple_Update_Others_Line1",
-  "Simple_Update_Others_Line2",
-  "Simple_Update_Others_Line3",
-  "Simple_Update_Others_Line4",
-  "Simple_SignState",
-  "Simple_SignDay",
-  "Simple_SignMonth",
-  "Simple_SignYear",
-  "Simple_SignPO_Name",
-  "Simple_SignPO_NIRC",
-  "Simple_SignAssignee_Name",
-  "Simple_SignAssignee_NIRC",
-  "Simple_SignWitness_Name",
-  "Simple_SignWitness_NIRC",
-  "Simple_SignWitness_Mobile"
-];
+    // FILL FORM FIELDS FROM LOCALSTORAGE
+    const fieldNames = [
+      "Simple_BasicInfo_InsuredName",
+      "Simple_BasicInfo_PolicyNo",
+      "Simple_BasicInfo_InsuredNIRC",
+      "Simple_Update_Name",
+      "Simple_Update_Insured",
+      "Simple_Update_InsuredName_Text",
+      "Simple_Update_DOB",
+      "Simple_Update_PO",
+      "Simple_Update_Nominee",
+      "Simple_Update_NIRC",
+      "Simple_Update_Sex",
+      "Simple_Update_Country",
+      "Simple_Update_Nationality",
+      "Simple_Update_InsuredDOB_Text",
+      "Simple_Update_InsuredNIRC_Text",
+      "Simple_Update_InsuredSex_Text",
+      "Simple_Update_InsuredCountry_Text",
+      "Simple_Update_InsuredNationality_Text",
+      "Simple_Update_POName_Text",
+      "Simple_Update_PODOB_Text",
+      "Simple_Update_PONIRC_Text", 
+      "Simple_Update_POSex_Text", 
+      "Simple_Update_POCountry_Text",
+      "Simple_Update_PONationality_Text",
+      "Simple_Update_NomineeName_Text",
+      "Simple_Update_NomineeDOB_Text",
+      "Simple_Update_NomineeNIRC_Text",
+      "Simple_Update_NomineeSex_Text",
+      "Simple_Update_NomineeCountry_Text",
+      "Simple_Update_NomineeNationality_Text",
+      "Simple_Update_Others_Line1",
+      "Simple_Update_Others_Line2",
+      "Simple_Update_Others_Line3",
+      "Simple_Update_Others_Line4",
+      "Simple_SignState",
+      "Simple_SignDay",
+      "Simple_SignMonth",
+      "Simple_SignYear",
+      "Simple_SignPO_Name",
+      "Simple_SignPO_NIRC",
+      "Simple_SignAssignee_Name",
+      "Simple_SignAssignee_NIRC",
+      "Simple_SignWitness_Name",
+      "Simple_SignWitness_NIRC",
+      "Simple_SignWitness_Mobile"
+    ];
 
-fieldNames.forEach(fieldName => {
-  // If the UI section containing this field is currently unticked, skip it.
-  if (!shouldIncludeFieldByUI(fieldName)) return;
+    fieldNames.forEach(fieldName => {
+      if (!shouldIncludeFieldByUI(fieldName)) return;
 
-  const value = localStorage.getItem(fieldName);
-  safeSetField(form, fieldName, value);
-});
-
-  // --- Shared checkboxes for Insured / PO / Nominee ---
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
-  "Simple_Update_InsuredName",
-  "Simple_Update_POName",
-  "Simple_Update_NomineeName"
-]);
-
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
-  "Simple_Update_InsuredDOB",
-  "Simple_Update_PODOB",
-  "Simple_Update_NomineeDOB"
-]);
-
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
-  "Simple_Update_InsuredNIRC",
-  "Simple_Update_PONIRC",
-  "Simple_Update_NomineeNIRC"
-]);
-
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
-  "Simple_Update_InsuredSex",
-  "Simple_Update_POSex",
-  "Simple_Update_NomineeSex"
-]);
-
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
-  "Simple_Update_InsuredCountry",
-  "Simple_Update_POCountry",
-  "Simple_Update_NomineeCountry"
-]);
-
-mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
-  "Simple_Update_InsuredNationality",
-  "Simple_Update_PONationality",
-  "Simple_Update_NomineeNationality"
-]);
-
-      
-      
-/* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
-
-// Owner signature FillPDF
-const sig_Simple_Owner = localStorage.getItem("sig_simple_owner");
-if (sig_Simple_Owner) {
-  try {
-    const img_Simple_Owner = await pdfDoc.embedPng(sig_Simple_Owner);
-    const { width, height } = img_Simple_Owner.size();
-
-    const previewEl = document.getElementById("preview_simple_owner");
-    const boxW = previewEl.offsetWidth;
-    const boxH = previewEl.offsetHeight;
-
-    const scale = Math.min(boxW / width, boxH / height);
-    let drawW = width * scale;
-    let drawH = height * scale;
-
-    const factor = 0.40;    // % scale
-    const posX = 50;         // X position on PDF
-    const posY = 300;        // Y position on PDF
-
-    drawW *= factor;
-    drawH *= factor;
-
-    page.drawImage(img_Simple_Owner, {
-      x: posX,
-      y: posY,
-      width: drawW,
-      height: drawH
+      const value = localStorage.getItem(fieldName);
+      const fontSize = getFontSizeForField(fieldName);
+      safeSetFieldFixed(form, fieldName, value, fontSize);
     });
-  } catch (e) {
-    console.error(e);
-  }
-}
 
-// Witness signature FillPDF
-const sig_Simple_Witness = localStorage.getItem("sig_simple_witness");
-if (sig_Simple_Witness) {
-  try {
-    const img_Simple_Witness = await pdfDoc.embedPng(sig_Simple_Witness);
-    const { width, height } = img_Simple_Witness.size();
+    // --- Shared checkboxes for Insured / PO / Nominee ---
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
+      "Simple_Update_InsuredName",
+      "Simple_Update_POName",
+      "Simple_Update_NomineeName"
+    ]);
 
-    const previewEl = document.getElementById("preview_simple_witness");
-    const boxW = previewEl.offsetWidth;
-    const boxH = previewEl.offsetHeight;
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
+      "Simple_Update_InsuredDOB",
+      "Simple_Update_PODOB",
+      "Simple_Update_NomineeDOB"
+    ]);
 
-    const scale = Math.min(boxW / width, boxH / height);
-    let drawW = width * scale;
-    let drawH = height * scale;
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
+      "Simple_Update_InsuredNIRC",
+      "Simple_Update_PONIRC",
+      "Simple_Update_NomineeNIRC"
+    ]);
 
-    const factor = 0.40;    // % scale
-    const posX = 410;         // X position on PDF
-    const posY = 300;        // Y position on PDF
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
+      "Simple_Update_InsuredSex",
+      "Simple_Update_POSex",
+      "Simple_Update_NomineeSex"
+    ]);
 
-    drawW *= factor;
-    drawH *= factor;
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
+      "Simple_Update_InsuredCountry",
+      "Simple_Update_POCountry",
+      "Simple_Update_NomineeCountry"
+    ]);
 
-    page.drawImage(img_Simple_Witness, {
-      x: posX,
-      y: posY,
-      width: drawW,
-      height: drawH
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
+    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
+      "Simple_Update_InsuredNationality",
+      "Simple_Update_PONationality",
+      "Simple_Update_NomineeNationality"
+    ]);
 
+    /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
 
-// Assignee signature FillPDF
-const sig_Simple_Assignee = localStorage.getItem("sig_simple_assignee");
-if (sig_Simple_Assignee) {
-  try {
-    const img_Simple_Assignee = await pdfDoc.embedPng(sig_Simple_Assignee);
-    const { width, height } = img_Simple_Assignee.size();
+    // Helper for embedding signatures cleanly
+    const embedSig = async (storageKey, previewId, posX, posY, scaleFactor = 0.40) => {
+      const sigData = localStorage.getItem(storageKey);
+      if (!sigData) return;
+      try {
+        const img = await pdfDoc.embedPng(sigData);
+        const { width, height } = img.size();
+        const previewEl = document.getElementById(previewId);
+        const boxW = previewEl ? previewEl.offsetWidth : 100;
+        const boxH = previewEl ? previewEl.offsetHeight : 50;
 
-    const previewEl = document.getElementById("preview_simple_assignee");
-    const boxW = previewEl.offsetWidth;
-    const boxH = previewEl.offsetHeight;
+        const scale = Math.min(boxW / width, boxH / height);
+        const drawW = width * scale * scaleFactor;
+        const drawH = height * scale * scaleFactor;
 
-    const scale = Math.min(boxW / width, boxH / height);
-    let drawW = width * scale;
-    let drawH = height * scale;
+        page.drawImage(img, { x: posX, y: posY, width: drawW, height: drawH });
+      } catch (e) {
+        console.error(`Failed to embed ${storageKey}:`, e);
+      }
+    };
 
-    const factor = 0.40;    // % scale
-    const posX = 230;         // X position on PDF
-    const posY = 300;        // Y position on PDF
+    await embedSig("sig_simple_owner", "preview_simple_owner", 50, 300);
+    await embedSig("sig_simple_witness", "preview_simple_witness", 410, 300);
+    await embedSig("sig_simple_assignee", "preview_simple_assignee", 230, 300);
+    await embedSig("sig_simple_oldsig", "preview_simple_oldsig", 75, 650);
+    await embedSig("sig_simple_newsig", "preview_simple_newsig", 390, 650);
 
-    drawW *= factor;
-    drawH *= factor;
+    // Force pdf-lib to write explicit appearance streams using Helvetica baseline metrics
+    form.updateFieldAppearances(customFont);
 
-    page.drawImage(img_Simple_Assignee, {
-      x: posX,
-      y: posY,
-      width: drawW,
-      height: drawH
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-    // Oldsig signature FillPDF
-const sig_Simple_Oldsig = localStorage.getItem("sig_simple_oldsig");
-if (sig_Simple_Oldsig) {
-  try {
-    const img_Simple_Oldsig = await pdfDoc.embedPng(sig_Simple_Oldsig);
-    const { width, height } = img_Simple_Oldsig.size();
-
-    const previewEl = document.getElementById("preview_simple_oldsig");
-    const boxW = previewEl.offsetWidth;
-    const boxH = previewEl.offsetHeight;
-
-    const scale = Math.min(boxW / width, boxH / height);
-    let drawW = width * scale;
-    let drawH = height * scale;
-
-    const factor = 0.40;    // % scale
-    const posX = 75;         // X position on PDF
-    const posY = 650;        // Y position on PDF
-
-    drawW *= factor;
-    drawH *= factor;
-
-    page.drawImage(img_Simple_Oldsig, {
-      x: posX,
-      y: posY,
-      width: drawW,
-      height: drawH
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-    // Newsig signature FillPDF
-const sig_Simple_Newsig = localStorage.getItem("sig_simple_newsig");
-if (sig_Simple_Newsig) {
-  try {
-    const img_Simple_Newsig = await pdfDoc.embedPng(sig_Simple_Newsig);
-    const { width, height } = img_Simple_Newsig.size();
-
-    const previewEl = document.getElementById("preview_simple_newsig");
-    const boxW = previewEl.offsetWidth;
-    const boxH = previewEl.offsetHeight;
-
-    const scale = Math.min(boxW / width, boxH / height);
-    let drawW = width * scale;
-    let drawH = height * scale;
-
-    const factor = 0.40;    // % scale
-    const posX = 390;         // X position on PDF
-    const posY = 650;        // Y position on PDF
-
-    drawW *= factor;
-    drawH *= factor;
-
-    page.drawImage(img_Simple_Newsig, {
-      x: posX,
-      y: posY,
-      width: drawW,
-      height: drawH
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-    
-    // Flatten form fields before saving
-    //form.flatten();
-    
-        // Save & download FillPDF
+    // Save & download FillPDF
     const pdfBytes = await pdfDoc.save();
 
-    // 1. Get Policy Number and handle naming
+    // Get Policy Number and handle naming
     const policyInput = document.getElementById('Simple_BasicInfo_PolicyNo');
     let policyNum = "NEW";
     
     if (policyInput && policyInput.value.trim() !== "") {
-        // Remove special characters that aren't allowed in filenames
-        policyNum = policyInput.value.trim().replace(/[^a-z0-9]/gi, '_');
+      policyNum = policyInput.value.trim().replace(/[^a-z0-9]/gi, '_');
     }
 
     const finalFileName = `${policyNum}_RFC_Simple_Change.pdf`;
 
-    // 2. Trigger Download
+    // Trigger Download
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); 
     
     a.href = url; 
-    a.download = finalFileName; // Dynamic name applied here
+    a.download = finalFileName;
     
     document.body.appendChild(a); 
     a.click(); 
     a.remove();
     
-    setTimeout(()=> URL.revokeObjectURL(url), 2500);
+    setTimeout(() => URL.revokeObjectURL(url), 2500);
 
   } catch(err){
     alert("PDF generation failed: " + (err.message || err));
     console.error(err);
   } finally {
-    // This assumes your $ helper is defined: const $ = id => document.getElementById(id);
     $("generate").disabled = false;
   }
 }
