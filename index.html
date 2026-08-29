@@ -1418,13 +1418,15 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(refreshAllDisplays, 100);
 });
 
-/* ---------- GENERATE PDF ---------- */
-async function fillPDF(){
-  try {
-    $("generate").disabled = true;
+/* ---------- GENERATE PDF (With Dynamic Template & View/Download Actions) ---------- */
+async function fillPDF(templateFileName = PDF_FILENAME, action = 'download') {
+  // Grab all action buttons to disable them during generation
+  const actionButtons = document.querySelectorAll('.actions button, #generate');
+  actionButtons.forEach(btn => btn.disabled = true);
 
-    const res = await fetch(PDF_FILENAME);
-    if (!res.ok) throw new Error("Cannot load PDF: " + PDF_FILENAME);
+  try {
+    const res = await fetch(templateFileName);
+    if (!res.ok) throw new Error("Cannot load PDF template: " + templateFileName);
     const bytes = await res.arrayBuffer();
     const pdfDoc = await PDFLib.PDFDocument.load(bytes);
     const form = pdfDoc.getForm();
@@ -1493,11 +1495,8 @@ async function fillPDF(){
 
     // Helper to determine fixed font size based on field type/length
     const getFontSizeForField = (fieldName) => {
-      // Use 8.5pt for name fields so long names fit without truncation or clipping
       if (fieldName.includes("Name")) return 8.5;
-      // Use 8pt for longer multi-line/other input fields
       if (fieldName.includes("Others") || fieldName.includes("Add")) return 8.0;
-      // Default fixed size for NRIC, dates, mobile, policy numbers, etc.
       return 9.0;
     };
 
@@ -1551,7 +1550,7 @@ async function fillPDF(){
     ];
 
     fieldNames.forEach(fieldName => {
-      if (!shouldIncludeFieldByUI(fieldName)) return;
+      if (typeof shouldIncludeFieldByUI === "function" && !shouldIncludeFieldByUI(fieldName)) return;
 
       const value = localStorage.getItem(fieldName);
       const fontSize = getFontSizeForField(fieldName);
@@ -1559,41 +1558,43 @@ async function fillPDF(){
     });
 
     // --- Shared checkboxes for Insured / PO / Nominee ---
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
-      "Simple_Update_InsuredName",
-      "Simple_Update_POName",
-      "Simple_Update_NomineeName"
-    ]);
+    if (typeof mapSharedCheckboxToPdf === "function") {
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
+        "Simple_Update_InsuredName",
+        "Simple_Update_POName",
+        "Simple_Update_NomineeName"
+      ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
-      "Simple_Update_InsuredDOB",
-      "Simple_Update_PODOB",
-      "Simple_Update_NomineeDOB"
-    ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
+        "Simple_Update_InsuredDOB",
+        "Simple_Update_PODOB",
+        "Simple_Update_NomineeDOB"
+      ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
-      "Simple_Update_InsuredNIRC",
-      "Simple_Update_PONIRC",
-      "Simple_Update_NomineeNIRC"
-    ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
+        "Simple_Update_InsuredNIRC",
+        "Simple_Update_PONIRC",
+        "Simple_Update_NomineeNIRC"
+      ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
-      "Simple_Update_InsuredSex",
-      "Simple_Update_POSex",
-      "Simple_Update_NomineeSex"
-    ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
+        "Simple_Update_InsuredSex",
+        "Simple_Update_POSex",
+        "Simple_Update_NomineeSex"
+      ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
-      "Simple_Update_InsuredCountry",
-      "Simple_Update_POCountry",
-      "Simple_Update_NomineeCountry"
-    ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
+        "Simple_Update_InsuredCountry",
+        "Simple_Update_POCountry",
+        "Simple_Update_NomineeCountry"
+      ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
-      "Simple_Update_InsuredNationality",
-      "Simple_Update_PONationality",
-      "Simple_Update_NomineeNationality"
-    ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
+        "Simple_Update_InsuredNationality",
+        "Simple_Update_PONationality",
+        "Simple_Update_NomineeNationality"
+      ]);
+    }
 
     /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
 
@@ -1627,8 +1628,10 @@ async function fillPDF(){
     // Force pdf-lib to write explicit appearance streams using Helvetica baseline metrics
     form.updateFieldAppearances(customFont);
 
-    // Save & download FillPDF
+    // Save PDF bytes & create Blob URL
     const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
 
     // Get Policy Number and handle naming
     const policyInput = document.getElementById('Simple_BasicInfo_PolicyNo');
@@ -1640,27 +1643,30 @@ async function fillPDF(){
 
     const finalFileName = `${policyNum}_RFC_Simple_Change.pdf`;
 
-    // Trigger Download
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); 
-    
-    a.href = url; 
-    a.download = finalFileName;
-    
-    document.body.appendChild(a); 
-    a.click(); 
-    a.remove();
-    
-    setTimeout(() => URL.revokeObjectURL(url), 2500);
+    // Execute Action (View in New Tab OR Force Download)
+    if (action === 'view') {
+      window.open(url, '_blank');
+    } else {
+      const a = document.createElement("a"); 
+      a.href = url; 
+      a.download = finalFileName;
+      document.body.appendChild(a); 
+      a.click(); 
+      a.remove();
+    }
 
-  } catch(err){
+    // Revoke Blob URL to free memory after 5 seconds
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  } catch(err) {
     alert("PDF generation failed: " + (err.message || err));
-    console.error(err);
+    console.error("Critical PDF Error:", err);
   } finally {
-    $("generate").disabled = false;
+    // Re-enable action buttons
+    actionButtons.forEach(btn => btn.disabled = false);
   }
 }
+
 
 
 
