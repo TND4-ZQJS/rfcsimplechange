@@ -1667,22 +1667,16 @@ async function fillPDF(templateFileName = PDF_FILENAME, action = 'download') {
   }
 }
 
-
-
-
-/* ---------- RESET ALL DATA ---------- */
-// Function named resetAllData to match the model pattern and handle full form reset safely
+/* ---------- RESET ALL DATA (With <span> Display Clears) ---------- */
 function resetAllData() {
   if (!confirm("Are you sure you want to reset the form? All saved data will be cleared.")) return;
 
-  // 1. Reset inputs AND remove only form field keys from localStorage
+  // 1. Reset standard form inputs (inputs, selects, textareas)
   document.querySelectorAll("input, select, textarea").forEach(el => {
-    // Remove only this specific field's saved value from localStorage
     if (el.id) {
       localStorage.removeItem(el.id);
     }
 
-    // Clear the visual field based on type
     if (el.type === "checkbox" || el.type === "radio") {
       el.checked = false;
     } else {
@@ -1690,21 +1684,34 @@ function resetAllData() {
     }
   });
 
-  // 2. Remove radio group selections stored under non-element keys
-  const radioGroups = ["Paymentmodetype", "Paymentmethodtype", "Changesignature"];
-  radioGroups.forEach(group => localStorage.removeItem(group));
+  // 2. EXPLICITLY CLEAR DISPLAY <span> ELEMENTS
+  const displaySpanIds = [
+    "Simple_PO_Name_Display",
+    "Simple_Witness_Name_Display",
+    "Simple_Assignee_Name_Display"
+  ];
 
-  // 3. Reset Signature Previews and clear signature keys dynamically
+  displaySpanIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = "";
+      localStorage.removeItem(id);
+    }
+  });
+
+  // 3. Remove non-element localStorage keys (Radio groups, sync states)
+  const extraKeys = ["Paymentmodetype", "Paymentmethodtype", "Changesignature", "same_as_insured"];
+  extraKeys.forEach(key => localStorage.removeItem(key));
+
+  // 4. Reset Signature Previews and clear signature keys
   document.querySelectorAll("[data-sig-role]").forEach(block => {
-    const role = block.dataset.sigRole; // e.g., 'simple_owner', 'simple_witness', etc.
+    const role = block.dataset.sigRole;
     const previewEl = block.querySelector("[data-sig-preview]");
     const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "SIMPLE";
     
-    // Remove signature storage key
     localStorage.removeItem(`sig_${formId}_${role}`);
     localStorage.removeItem(`sig_${role}`);
 
-    // Clean human-readable label format matching the target roles
     const cleanRoleName = role.replace(/^simple_/, "");
     const formattedTitle = cleanRoleName.charAt(0).toUpperCase() + cleanRoleName.slice(1);
     
@@ -1713,7 +1720,7 @@ function resetAllData() {
     }
   });
 
-  // Fallback signature reset if element data attributes aren't used
+  // Fallback signature reset if dataset attributes are missing
   const sigFallbackMap = {
     "preview_simple_owner": "Policy Owner",
     "preview_simple_witness": "Witness",
@@ -1729,10 +1736,10 @@ function resetAllData() {
     }
   });
 
-  // 4. Update save status notification if standard helper exists
+  // 5. Update save status notification
   if (typeof showSaveStatus === "function") showSaveStatus();
 }
-
+    
 
   /* ---------- Wire buttons ---------- */
 $("generate").addEventListener("click", fillPDF);
