@@ -803,10 +803,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
   </section>
     
-    <section class="section actions">
-    <button id="generate">Generate PDF</button>
-    <button id="resetAll" class="secondary">Reset All</button>
-  </section>
  </div><!-- (End) STEP 4: Sign -->
 
 <div class="wizard-step"><!-- Step 5: Generate -->
@@ -1418,7 +1414,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(refreshAllDisplays, 100);
 });
 
-/* ---------- GENERATE PDF (With Dynamic Template & View/Download Actions) ---------- */
+/* ---------- GENERATE PDF ---------- */
 async function fillPDF(templateFileName = PDF_FILENAME, action = 'download') {
   // Grab all action buttons to disable them during generation
   const actionButtons = document.querySelectorAll('.actions button, #generate');
@@ -1739,12 +1735,6 @@ function resetAllData() {
   // 5. Update save status notification
   if (typeof showSaveStatus === "function") showSaveStatus();
 }
-    
-
-  /* ---------- Wire buttons ---------- */
-$("generate").addEventListener("click", fillPDF);
-$("resetAll").addEventListener("click", resetAll);
-document.querySelectorAll(".persist").forEach(autoBindSave);
 
 
 // ---------- SECTION TOGGLE LOGIC ----------
