@@ -750,7 +750,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </section>
 
   <!-- SECTION: Owner/Policyowner Signature -->
-  <section class="section">
+  <section class="section" data-sig-role="owner" data-sig-title="Sign: Policy Owner">
     <h2>Signature of Policyowner</h2>
 
       <div class="row">
@@ -759,16 +759,16 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </label>
 </div>
 
-        <div class="sig-preview" id="preview_simple_owner" onclick="openSig('simple_owner')">
+    <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Policyowner)</span>
     </div>
     <div class="row">
-      <button id="clearPreview_Simple_Owner" class="secondary" type="button">Clear Signature</button>
+      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
   </section>
 
   <!-- SECTION: Witness Signature -->
-  <section class="section">
+  <section class="section" data-sig-role="witness" data-sig-title="Sign: Witness">
     <h2>Signature of Witness</h2>
 
  <div class="row">
@@ -777,16 +777,16 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </label>
 </div>
 
-    <div class="sig-preview" id="preview_simple_witness" onclick="openSig('simple_witness')">
+    <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Witness)</span>
     </div>
     <div class="row">
-      <button id="clearPreview_Simple_Witness" class="secondary" type="button">Clear Signature</button>
+      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
   </section>
   
     <!-- SECTION: Assignee -->
-  <section class="section">
+  <section class="section" data-sig-role="assignee" data-sig-title="Sign: Assignee"
     <h2>Signature of Assignee</h2>
 
   <div class="row">
@@ -799,7 +799,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       <span>Tap to Sign (Assignee)</span>
     </div>
     <div class="row">
-      <button id="clearPreview_Simple_Assignee" class="secondary" type="button">Clear Signature</button>
+      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
   </section>
     
@@ -842,11 +842,13 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       <button type="button" id="nextBtn" onclick="changeStep(1)">Next Step</button>
     </div>
   
-    <div id="sigModal" class="sig-modal" aria-hidden="true">
+<!-- Signature Modal -->
+<div id="sigModal" class="sig-modal" aria-hidden="true">
   <div class="box">
     <h3 id="sigModalTitle">Draw Signature</h3>
-    <!-- Responsive canvas: internal pixels are set in JS for crispness -->
-    <canvas id="sigCanvas"></canvas>
+    <div class="canvas-wrapper">
+      <canvas id="sigCanvas"></canvas>
+    </div>
     <div class="sig-actions">
       <button id="sigDone" type="button">Done</button>
       <button id="sigClear" type="button" class="ghost">Clear</button>
@@ -854,6 +856,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
   </div>
 </div>
+    
     <div id="saveStatus">Saved</div>
   </section>
 
