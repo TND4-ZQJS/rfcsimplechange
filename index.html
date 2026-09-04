@@ -1351,22 +1351,34 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(refreshAllDisplays, 100);
 });
 
-/* ---------- GENERATE PDF ---------- */
-async function fillPDF(){
+/* ---------- Generate PDF ---------- */
+async function fillPDF(templateFileName, action = 'download') {
+  // Grab action buttons to disable them during generation
+  const actionButtons = document.querySelectorAll('.actions button');
+  actionButtons.forEach(btn => btn.disabled = true);
+
+  // Helper function to safely fetch input DOM values without crashing on missing elements
+  const getValue = (id) => {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+  };
+
+  const getChecked = (id) => {
+    const el = document.getElementById(id);
+    return el ? el.checked : false;
+  };
+
   try {
-    $("generate").disabled = true;
+    // 1. Fetch template PDF
+    const response = await fetch(templateFileName);
+    if (!response.ok) {
+      throw new Error(`Failed to load template file: ${templateFileName}`);
+    }
+    const existingPdfBytes = await response.arrayBuffer();
 
-    const res = await fetch(PDF_FILENAME);
-    if (!res.ok) throw new Error("Cannot load PDF: " + PDF_FILENAME);
-    const bytes = await res.arrayBuffer();
-    const pdfDoc = await PDFLib.PDFDocument.load(bytes);
-    const form = pdfDoc.getForm();
-
-    // Embed standard Helvetica to write explicit font appearance baselines (fixes iOS/Safari clipping)
-    const customFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-
-    const pages = pdfDoc.getPages();
-    const page = pages[1]; // use 2nd page
+    // 2. Load PDF document & get interactive form
+    const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+    const form = pdfDoc.getForm(); // <-- FIXED: Form initialization added
 
     /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
     function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
@@ -1412,27 +1424,6 @@ async function fillPDF(){
     ], "Changesignature");
     /* ===== end mapping ===== */
 
-    // Helper: Set text using explicit fixed font sizes to bypass Safari baseline calculation bugs
-    const safeSetFieldFixed = (formRef, fieldName, textValue, fontSize = 9) => {
-      try {
-        const field = formRef.getTextField(fieldName);
-        const val = (textValue || "").toUpperCase();
-        field.setText(val);
-        field.setFontSize(fontSize);
-      } catch (e) {
-        console.warn(`Field ${fieldName} not found or failed to set text:`, e);
-      }
-    };
-
-    // Helper to determine fixed font size based on field type/length
-    const getFontSizeForField = (fieldName) => {
-      // Use 8.5pt for name fields so long names fit without truncation or clipping
-      if (fieldName.includes("Name")) return 8.5;
-      // Use 8pt for longer multi-line/other input fields
-      if (fieldName.includes("Others") || fieldName.includes("Add")) return 8.0;
-      // Default fixed size for NRIC, dates, mobile, policy numbers, etc.
-      return 9.0;
-    };
 
     // FILL FORM FIELDS FROM LOCALSTORAGE
     const fieldNames = [
@@ -1528,38 +1519,6 @@ async function fillPDF(){
       "Simple_Update_NomineeNationality"
     ]);
 
-    /* --------- SIGNATURE IMAGE EMBEDDING (embedPng + drawImage) --------- */
-
-    // Helper for embedding signatures cleanly
-    const embedSig = async (storageKey, previewId, posX, posY, scaleFactor = 0.40) => {
-      const sigData = localStorage.getItem(storageKey);
-      if (!sigData) return;
-      try {
-        const img = await pdfDoc.embedPng(sigData);
-        const { width, height } = img.size();
-        const previewEl = document.getElementById(previewId);
-        const boxW = previewEl ? previewEl.offsetWidth : 100;
-        const boxH = previewEl ? previewEl.offsetHeight : 50;
-
-        const scale = Math.min(boxW / width, boxH / height);
-        const drawW = width * scale * scaleFactor;
-        const drawH = height * scale * scaleFactor;
-
-        page.drawImage(img, { x: posX, y: posY, width: drawW, height: drawH });
-      } catch (e) {
-        console.error(`Failed to embed ${storageKey}:`, e);
-      }
-    };
-
-    await embedSig("sig_simple_owner", "preview_simple_owner", 50, 300);
-    await embedSig("sig_simple_witness", "preview_simple_witness", 410, 300);
-    await embedSig("sig_simple_assignee", "preview_simple_assignee", 230, 300);
-    await embedSig("sig_simple_oldsig", "preview_simple_oldsig", 75, 650);
-    await embedSig("sig_simple_newsig", "preview_simple_newsig", 390, 650);
-
-    // Force pdf-lib to write explicit appearance streams using Helvetica baseline metrics
-    form.updateFieldAppearances(customFont);
-
     // Save & download FillPDF
     const pdfBytes = await pdfDoc.save();
 
@@ -1623,7 +1582,7 @@ function resetAllData() {
   document.querySelectorAll("[data-sig-role]").forEach(block => {
     const role = block.dataset.sigRole; // e.g., 'simple_owner', 'simple_witness', etc.
     const previewEl = block.querySelector("[data-sig-preview]");
-    const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "SIMPLE";
+    const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "Simple";
     
     // Remove signature storage key
     localStorage.removeItem(`sig_${formId}_${role}`);
