@@ -1517,11 +1517,11 @@ if (typeof mapSharedCheckboxToPdf === "function") {
 
 // Embed Signatures (Note: 0-indexed page numbering)
     // For Page 1 use 0, Page 2 use 1, Page 3 use 2
-    const targetPageIndex = 2; // Adjust this index to match the target page in your PDF template
+    const targetPageIndex = 1; // Adjust this index to match the target page in your PDF template
 
-    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "owner",   x: 50,  y: 520, factor: 0.50 });
-    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "trustee", x: 240, y: 520, factor: 0.50 });
-    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "witness", x: 420, y: 520, factor: 0.50 });
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "owner",   x: 50,  y: 300, factor: 0.50 });
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "trustee", x: 410, y: 300, factor: 0.50 });
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "witness", x: 230, y: 300, factor: 0.50 });
       
     // Save & download FillPDF
     const pdfBytes = await pdfDoc.save();
