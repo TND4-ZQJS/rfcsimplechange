@@ -1380,145 +1380,149 @@ async function fillPDF(templateFileName, action = 'download') {
     const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm(); // <-- FIXED: Form initialization added
 
-    /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
-    function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
-      if (controllerCheckboxId) {
-        const ctrl = document.getElementById(controllerCheckboxId);
-        if (ctrl && !ctrl.checked) {
-          pdfCheckboxNames.forEach(fieldName => {
-            try { form.getCheckBox(fieldName).uncheck(); } catch (e) {}
-          });
-          return;
-        }
-      }
-
-      const selectedId = localStorage.getItem(groupName);
-      pdfCheckboxNames.forEach(fieldName => {
-        try {
-          const field = form.getCheckBox(fieldName);
-          if (fieldName === selectedId) field.check();
-          else field.uncheck();
-        } catch (e) {
-          console.warn(`Checkbox field ${fieldName} not found in PDF`);
-        }
-      });
+   /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
+function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
+  // If the controlling UI section checkbox exists and is unchecked, clear all fields
+  if (controllerCheckboxId) {
+    const ctrl = document.getElementById(controllerCheckboxId);
+    if (ctrl && !ctrl.checked) {
+      pdfCheckboxNames.forEach(fieldName => safeCheck(form, fieldName, false));
+      return;
     }
-        
-    mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
-      "Simple_Payment_Annual",
-      "Simple_Payment_SemiAnnual",
-      "Simple_Payment_Quarterly",
-      "Simple_Payment_Monthly"
-    ], "Changepaymentmode");
+  }
 
-    mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
-      "Simple_Payment_FPX",
-      "Simple_Payment_Internet"
-    ], "Changepaymentmethod");
+  // Otherwise, check only the item matching localStorage selection
+  const selectedId = localStorage.getItem(groupName);
+  pdfCheckboxNames.forEach(fieldName => {
+    safeCheck(form, fieldName, fieldName === selectedId);
+  });
+}
 
-    mapRadioGroupToPdfCheckboxes("Changesignature", [
-      "Simple_ChangeSig_Insured",
-      "Simple_ChangeSig_Assignee",
-      "Simple_ChangeSig_PO",
-      "Simple_ChangeSig_Trustee"
-    ], "Changesignature");
-    /* ===== end mapping ===== */
+mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
+  "Simple_Payment_Annual",
+  "Simple_Payment_SemiAnnual",
+  "Simple_Payment_Quarterly",
+  "Simple_Payment_Monthly"
+], "Changepaymentmode");
+
+mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
+  "Simple_Payment_FPX",
+  "Simple_Payment_Internet"
+], "Changepaymentmethod");
+
+mapRadioGroupToPdfCheckboxes("Changesignature", [
+  "Simple_ChangeSig_Insured",
+  "Simple_ChangeSig_Assignee",
+  "Simple_ChangeSig_PO",
+  "Simple_ChangeSig_Trustee"
+], "Changesignature");
+/* ===== end mapping ===== */
 
 
-    // FILL FORM FIELDS FROM LOCALSTORAGE
-    const fieldNames = [
-      "Simple_BasicInfo_InsuredName",
-      "Simple_BasicInfo_PolicyNo",
-      "Simple_BasicInfo_InsuredNIRC",
-      "Simple_Update_Name",
-      "Simple_Update_Insured",
-      "Simple_Update_InsuredName_Text",
-      "Simple_Update_DOB",
-      "Simple_Update_PO",
-      "Simple_Update_Nominee",
-      "Simple_Update_NIRC",
-      "Simple_Update_Sex",
-      "Simple_Update_Country",
-      "Simple_Update_Nationality",
-      "Simple_Update_InsuredDOB_Text",
-      "Simple_Update_InsuredNIRC_Text",
-      "Simple_Update_InsuredSex_Text",
-      "Simple_Update_InsuredCountry_Text",
-      "Simple_Update_InsuredNationality_Text",
-      "Simple_Update_POName_Text",
-      "Simple_Update_PODOB_Text",
-      "Simple_Update_PONIRC_Text", 
-      "Simple_Update_POSex_Text", 
-      "Simple_Update_POCountry_Text",
-      "Simple_Update_PONationality_Text",
-      "Simple_Update_NomineeName_Text",
-      "Simple_Update_NomineeDOB_Text",
-      "Simple_Update_NomineeNIRC_Text",
-      "Simple_Update_NomineeSex_Text",
-      "Simple_Update_NomineeCountry_Text",
-      "Simple_Update_NomineeNationality_Text",
-      "Simple_Update_Others_Line1",
-      "Simple_Update_Others_Line2",
-      "Simple_Update_Others_Line3",
-      "Simple_Update_Others_Line4",
-      "Simple_SignState",
-      "Simple_SignDay",
-      "Simple_SignMonth",
-      "Simple_SignYear",
-      "Simple_SignPO_Name",
-      "Simple_SignPO_NIRC",
-      "Simple_SignAssignee_Name",
-      "Simple_SignAssignee_NIRC",
-      "Simple_SignWitness_Name",
-      "Simple_SignWitness_NIRC",
-      "Simple_SignWitness_Mobile"
-    ];
+// FILL FORM FIELDS FROM LOCALSTORAGE
+const fieldNames = [
+  "Simple_BasicInfo_InsuredName",
+  "Simple_BasicInfo_PolicyNo",
+  "Simple_BasicInfo_InsuredNIRC",
+  "Simple_Update_Name",
+  "Simple_Update_Insured",
+  "Simple_Update_InsuredName_Text",
+  "Simple_Update_DOB",
+  "Simple_Update_PO",
+  "Simple_Update_Nominee",
+  "Simple_Update_NIRC",
+  "Simple_Update_Sex",
+  "Simple_Update_Country",
+  "Simple_Update_Nationality",
+  "Simple_Update_InsuredDOB_Text",
+  "Simple_Update_InsuredNIRC_Text",
+  "Simple_Update_InsuredSex_Text",
+  "Simple_Update_InsuredCountry_Text",
+  "Simple_Update_InsuredNationality_Text",
+  "Simple_Update_POName_Text",
+  "Simple_Update_PODOB_Text",
+  "Simple_Update_PONIRC_Text", 
+  "Simple_Update_POSex_Text", 
+  "Simple_Update_POCountry_Text",
+  "Simple_Update_PONationality_Text",
+  "Simple_Update_NomineeName_Text",
+  "Simple_Update_NomineeDOB_Text",
+  "Simple_Update_NomineeNIRC_Text",
+  "Simple_Update_NomineeSex_Text",
+  "Simple_Update_NomineeCountry_Text",
+  "Simple_Update_NomineeNationality_Text",
+  "Simple_Update_Others_Line1",
+  "Simple_Update_Others_Line2",
+  "Simple_Update_Others_Line3",
+  "Simple_Update_Others_Line4",
+  "Simple_SignState",
+  "Simple_SignDay",
+  "Simple_SignMonth",
+  "Simple_SignYear",
+  "Simple_SignPO_Name",
+  "Simple_SignPO_NIRC",
+  "Simple_SignAssignee_Name",
+  "Simple_SignAssignee_NIRC",
+  "Simple_SignWitness_Name",
+  "Simple_SignWitness_NIRC",
+  "Simple_SignWitness_Mobile"
+];
 
-    fieldNames.forEach(fieldName => {
-      if (!shouldIncludeFieldByUI(fieldName)) return;
+fieldNames.forEach(fieldName => {
+  if (typeof shouldIncludeFieldByUI === "function" && !shouldIncludeFieldByUI(fieldName)) return;
 
-      const value = localStorage.getItem(fieldName);
-      const fontSize = getFontSizeForField(fieldName);
-      safeSetFieldFixed(form, fieldName, value, fontSize);
-    });
+  const value = getValue(fieldName) || localStorage.getItem(fieldName) || "";
+  const fontSize = typeof getFontSizeForField === "function" ? getFontSizeForField(fieldName) : 9;
+  safeSetText(form, fieldName, value, fontSize);
+});
 
-    // --- Shared checkboxes for Insured / PO / Nominee ---
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
-      "Simple_Update_InsuredName",
-      "Simple_Update_POName",
-      "Simple_Update_NomineeName"
-    ]);
+// --- Shared checkboxes for Insured / PO / Nominee ---
+if (typeof mapSharedCheckboxToPdf === "function") {
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
+    "Simple_Update_InsuredName",
+    "Simple_Update_POName",
+    "Simple_Update_NomineeName"
+  ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
-      "Simple_Update_InsuredDOB",
-      "Simple_Update_PODOB",
-      "Simple_Update_NomineeDOB"
-    ]);
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
+    "Simple_Update_InsuredDOB",
+    "Simple_Update_PODOB",
+    "Simple_Update_NomineeDOB"
+  ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
-      "Simple_Update_InsuredNIRC",
-      "Simple_Update_PONIRC",
-      "Simple_Update_NomineeNIRC"
-    ]);
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
+    "Simple_Update_InsuredNIRC",
+    "Simple_Update_PONIRC",
+    "Simple_Update_NomineeNIRC"
+  ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
-      "Simple_Update_InsuredSex",
-      "Simple_Update_POSex",
-      "Simple_Update_NomineeSex"
-    ]);
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
+    "Simple_Update_InsuredSex",
+    "Simple_Update_POSex",
+    "Simple_Update_NomineeSex"
+  ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
-      "Simple_Update_InsuredCountry",
-      "Simple_Update_POCountry",
-      "Simple_Update_NomineeCountry"
-    ]);
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
+    "Simple_Update_InsuredCountry",
+    "Simple_Update_POCountry",
+    "Simple_Update_NomineeCountry"
+  ]);
 
-    mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
-      "Simple_Update_InsuredNationality",
-      "Simple_Update_PONationality",
-      "Simple_Update_NomineeNationality"
-    ]);
+  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
+    "Simple_Update_InsuredNationality",
+    "Simple_Update_PONationality",
+    "Simple_Update_NomineeNationality"
+  ]);
+}
 
+// Embed Signatures (Note: 0-indexed page numbering)
+    // For Page 1 use 0, Page 2 use 1, Page 3 use 2
+    const targetPageIndex = 2; // Adjust this index to match the target page in your PDF template
+
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "owner",   x: 50,  y: 520, factor: 0.50 });
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "trustee", x: 240, y: 520, factor: 0.50 });
+    await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "witness", x: 420, y: 520, factor: 0.50 });
+      
     // Save & download FillPDF
     const pdfBytes = await pdfDoc.save();
 
