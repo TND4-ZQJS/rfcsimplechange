@@ -372,7 +372,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 </head>
 <body>
 
-    <!-- Global Navigation Header -->
+     <!-- Global Navigation Header -->
     <header class="navbar">
         <div class="nav-container">
             <span class="logo" onclick="window.location.href='../dashboard.html'">CI Pro Universe</span>
@@ -879,7 +879,68 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </svg>
 </button>
 
-    
+<script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = "https://qotxxqwikxpsjnjddoqm.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_xpWOcimLjRbH2dbeRdoBSg_XddyOqYU";    
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global Logout Function
+        window.handleLogout = async function() {
+            try {
+                await supabase.auth.signOut();
+            } catch (err) {
+                console.error("Error during sign out:", err);
+            } finally {
+                window.location.href = "../login.html";
+            }
+        };
+
+        // TND4 Role Security Gatekeeper
+        async function checkPageAccess() {
+            try {
+                const { data: { user }, error: authError } = await supabase.auth.getUser();
+                
+                if (authError || !user) {
+                    window.location.href = "../login.html";
+                    return;
+                }
+
+                // Fetch user profile row from database
+                const { data: profile, error: profileError } = await supabase
+                    .from('user_profiles')
+                    .select('access_role')
+                    .eq('id', user.id)
+                    .single();
+
+                // 🛑 SCREENING RULE: Bounce anyone who isn't admin or tnd4
+                if (profileError || (profile?.access_role !== 'admin' && profile?.access_role !== 'tnd4')) {
+                    alert("Access Denied: TND4 Clearance Level Required.");
+                    window.location.href = "../login.html"; 
+                    return;
+                }
+
+                // 🎉 SUCCESS: Transition out the frosted-glass barrier smoothly
+                const overlay = document.getElementById('loadingStatus');
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    overlay.style.visibility = 'hidden';
+                    
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                    }, 400); 
+                }
+            } catch (globalErr) {
+                console.error("System structural error:", globalErr);
+                window.location.href = "../login.html";
+            }
+        }
+
+        // 🚀 Initialize verification loop cleanly on entry
+        checkPageAccess();
+    </script>        
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>    
 <script>
