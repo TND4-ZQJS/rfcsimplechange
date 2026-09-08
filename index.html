@@ -665,19 +665,25 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       </div>
     </div>
 
-      <div class="sig-preview" id="preview_simple_oldsig" onclick="openSig('simple_oldsig')">
+      <div class="section" data-sig-role="oldsig" data-sig-title="Sign: Old Signature">
+     <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Old Signature)</span>
-    </div>
+     </div>
+    
     <div class="row">
-      <button id="clearPreview_Simple_Oldsig" class="secondary" type="button">Clear Signature</button>
+      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
+      </div>
 
-      <div class="sig-preview" id="preview_simple_newsig" onclick="openSig('simple_newsig')">
+      <div class="section" data-sig-role="newsig" data-sig-title="Sign: New Signature">
+     <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (New Signature)</span>
-    </div>
+     </div>
+    
     <div class="row">
-      <button id="clearPreview_Simple_Newsig" class="secondary" type="button">Clear Signature</button>
+      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
+      </div>
   </section>
 
    <!-- SECTION: Others -->
@@ -795,7 +801,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </label>
 </div>
 
-    <div class="sig-preview" id="preview_simple_assignee" onclick="openSig('simple_assignee')">
+    <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Assignee)</span>
     </div>
     <div class="row">
