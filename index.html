@@ -1587,18 +1587,15 @@ if (typeof mapSharedCheckboxToPdf === "function") {
 }
 
 /* ---------- RESET ALL DATA ---------- */
-// Function named resetAllData to match the model pattern and handle full form reset safely
 function resetAllData() {
   if (!confirm("Are you sure you want to reset the form? All saved data will be cleared.")) return;
 
-  // 1. Reset inputs AND remove only form field keys from localStorage
+  // 1. Reset inputs AND remove form field keys from localStorage
   document.querySelectorAll("input, select, textarea").forEach(el => {
-    // Remove only this specific field's saved value from localStorage
     if (el.id) {
       localStorage.removeItem(el.id);
     }
 
-    // Clear the visual field based on type
     if (el.type === "checkbox" || el.type === "radio") {
       el.checked = false;
     } else {
@@ -1610,17 +1607,37 @@ function resetAllData() {
   const radioGroups = ["Paymentmodetype", "Paymentmethodtype", "Changesignature"];
   radioGroups.forEach(group => localStorage.removeItem(group));
 
-  // Reset Signature Previews
+  // 3. FULL SIGNATURE RESET (Storage, UI, & SignaturePad Canvas)
+  const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "Simple";
+
   document.querySelectorAll("[data-sig-role]").forEach(block => {
     const role = block.dataset.sigRole;
     const previewEl = block.querySelector("[data-sig-preview]");
+    const formattedRole = role.charAt(0).toUpperCase() + role.slice(1);
+
+    // Remove primary, secondary, and fallback localStorage signature keys
+    localStorage.removeItem(`sig_${formId}_${role}`);
+    localStorage.removeItem(`sig_${role}`);
+    localStorage.removeItem(role);
+
+    // Reset visual preview DOM
     if (previewEl) {
-      previewEl.innerHTML = `<span>Tap to Sign (${role.charAt(0).toUpperCase() + role.slice(1)})</span>`;
+      previewEl.innerHTML = `<span>Tap to Sign (${formattedRole})</span>`;
     }
   });
 
+  // Clear active canvas drawing & target reference
+  if (typeof signaturePad !== "undefined" && signaturePad) {
+    signaturePad.clear();
+  }
+  if (typeof sigTarget !== "undefined") {
+    sigTarget = null;
+  }
+
+  // 4. Update save status indicator
   if (typeof showSaveStatus === "function") showSaveStatus();
 }
+
 
 
 // ---------- SECTION TOGGLE LOGIC ----------
