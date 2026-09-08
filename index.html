@@ -648,23 +648,32 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 </section>
 
   
-  <!-- SECTION: Change Signature -->
-  <section class="section" id="ChangeSignatureSection">
-    <h2>D. Change of Signature</h2>
-    <div id="UserOption" class="grid-2">
-      <div>
-        <label class="inline"><input id="Simple_ChangeSig_Insured" class="persist"  name="Changesignature" type="radio">Insured</label>
-      </div>
-      <div>
-        <label class="inline"><input id="Simple_ChangeSig_PO" class="persist"  name="Changesignature" type="radio">Policy Owner</label>
-      </div>
-           <div>
-        <label class="inline"><input id="Simple_ChangeSig_Assignee" class="persist"  name="Changesignature" type="radio">Assignee</label>
-      </div>
-           <div>
-        <label class="inline"><input id="Simple_ChangeSig_Trustee" class="persist"  name="Changesignature" type="radio">Trustee</label>
-      </div>
+<!-- SECTION: Change Signature -->
+<section class="section" id="ChangeSignatureSection">
+  <h2>D. Change of Signature</h2>
+  <div id="UserOption" class="grid-2">
+    <div>
+      <label class="inline">
+        <input id="Simple_ChangeSig_Insured" value="Simple_ChangeSig_Insured" class="persist" name="Changesignature" type="radio">Insured
+      </label>
     </div>
+    <div>
+      <label class="inline">
+        <input id="Simple_ChangeSig_PO" value="Simple_ChangeSig_PO" class="persist" name="Changesignature" type="radio">Policy Owner
+      </label>
+    </div>
+    <div>
+      <label class="inline">
+        <input id="Simple_ChangeSig_Assignee" value="Simple_ChangeSig_Assignee" class="persist" name="Changesignature" type="radio">Assignee
+      </label>
+    </div>
+    <div>
+      <label class="inline">
+        <input id="Simple_ChangeSig_Trustee" value="Simple_ChangeSig_Trustee" class="persist" name="Changesignature" type="radio">Trustee
+      </label>
+    </div>
+  </div>
+
 
       <div class="section" data-sig-role="oldsig" data-sig-title="Sign: Old Signature">
      <div class="sig-preview" data-sig-preview>
@@ -1419,6 +1428,13 @@ mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
 mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
   "Simple_Payment_FPX",
   "Simple_Payment_Internet"
+], null);
+
+mapRadioGroupToPdfCheckboxes("Changesignature", [
+  "Simple_ChangeSig_Insured",
+  "Simple_ChangeSig_PO",
+  "Simple_ChangeSig_Assignee",
+  "Simple_ChangeSig_Trustee"
 ], null);
 
 
