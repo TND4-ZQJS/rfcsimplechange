@@ -616,36 +616,37 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </section>
 
     <!-- SECTION: Change of Payment Mode -->
-  <section class="section" id="ChangePaymentModeSection">
-    <h2>B. Change of Payment Mode</h2>
-    <div id="UserOption" class="grid-2">
-      <div>
-        <label class="inline"><input id="Simple_Payment_Annual" class="persist"  name="Paymentmodetype" type="radio">Annual</label>
-      </div>
-      <div>
-        <label class="inline"><input id="Simple_Payment_SemiAnnual" class="persist"  name="Paymentmodetype" type="radio">Semi-Annual</label>
-      </div>
-           <div>
-        <label class="inline"><input id="Simple_Payment_Quarterly" class="persist"  name="Paymentmodetype" type="radio">Quarterly</label>
-      </div>
-           <div>
-        <label class="inline"><input id="Simple_Payment_Monthly" class="persist"  name="Paymentmodetype" type="radio">Monthly</label>
-      </div>
+<section class="section" id="ChangePaymentModeSection">
+  <h2>B. Change of Payment Mode</h2>
+  <div id="UserOption" class="grid-2">
+    <div>
+      <label class="inline"><input id="Simple_Payment_Annual" value="Simple_Payment_Annual" class="persist" name="Paymentmodetype" type="radio">Annual</label>
     </div>
-  </section>
+    <div>
+      <label class="inline"><input id="Simple_Payment_SemiAnnual" value="Simple_Payment_SemiAnnual" class="persist" name="Paymentmodetype" type="radio">Semi-Annual</label>
+    </div>
+    <div>
+      <label class="inline"><input id="Simple_Payment_Quarterly" value="Simple_Payment_Quarterly" class="persist" name="Paymentmodetype" type="radio">Quarterly</label>
+    </div>
+    <div>
+      <label class="inline"><input id="Simple_Payment_Monthly" value="Simple_Payment_Monthly" class="persist" name="Paymentmodetype" type="radio">Monthly</label>
+    </div>
+  </div>
+</section>
 
-    <!-- SECTION: Change of Payment Type -->
-  <section class="section" id="ChangePaymentMethodSection">
-    <h2>C. Change of Payment Method</h2>
-    <div id="UserOption" class="grid-2">
-      <div>
-        <label class="inline"><input id="Simple_Payment_Internet" class="persist"  name="Paymentmethodtype" type="radio">Internet Banking</label>
-      </div>
-      <div>
-        <label class="inline"><input id="Simple_Payment_FPX" class="persist" name="Paymentmethodtype" type="radio">Direct Debit (FPX)</label>
-      </div>
+<!-- SECTION: Change of Payment Type -->
+<section class="section" id="ChangePaymentMethodSection">
+  <h2>C. Change of Payment Method</h2>
+  <div id="UserOption" class="grid-2">
+    <div>
+      <label class="inline"><input id="Simple_Payment_Internet" value="Simple_Payment_Internet" class="persist" name="Paymentmethodtype" type="radio">Internet Banking</label>
     </div>
-  </section>
+    <div>
+      <label class="inline"><input id="Simple_Payment_FPX" value="Simple_Payment_FPX" class="persist" name="Paymentmethodtype" type="radio">Direct Debit (FPX)</label>
+    </div>
+  </div>
+</section>
+
   
   <!-- SECTION: Change Signature -->
   <section class="section" id="ChangeSignatureSection">
@@ -1388,7 +1389,7 @@ async function fillPDF(templateFileName, action = 'download') {
 
    /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
 function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
-  // If the controlling UI section checkbox exists and is unchecked, clear all fields
+  // Check controller checkbox ONLY if it actually exists in the DOM
   if (controllerCheckboxId) {
     const ctrl = document.getElementById(controllerCheckboxId);
     if (ctrl && !ctrl.checked) {
@@ -1397,32 +1398,29 @@ function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerChe
     }
   }
 
-  // Otherwise, check only the item matching localStorage selection
-  const selectedId = localStorage.getItem(groupName);
+  // Find active DOM selection first, fallback to localStorage
+  const activeRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+  const selectedVal = activeRadio ? activeRadio.value : (localStorage.getItem(groupName) || "");
+
+  // Match against PDF checkbox names
   pdfCheckboxNames.forEach(fieldName => {
-    safeCheck(form, fieldName, fieldName === selectedId);
+    safeCheck(form, fieldName, fieldName === selectedVal);
   });
 }
 
+// Call without controller checkbox restriction if section checkboxes aren't in HTML:
 mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
   "Simple_Payment_Annual",
   "Simple_Payment_SemiAnnual",
   "Simple_Payment_Quarterly",
   "Simple_Payment_Monthly"
-], "Changepaymentmode");
+], null);
 
 mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
   "Simple_Payment_FPX",
   "Simple_Payment_Internet"
-], "Changepaymentmethod");
+], null);
 
-mapRadioGroupToPdfCheckboxes("Changesignature", [
-  "Simple_ChangeSig_Insured",
-  "Simple_ChangeSig_Assignee",
-  "Simple_ChangeSig_PO",
-  "Simple_ChangeSig_Trustee"
-], "Changesignature");
-/* ===== end mapping ===== */
 
 
 // FILL FORM FIELDS FROM LOCALSTORAGE
