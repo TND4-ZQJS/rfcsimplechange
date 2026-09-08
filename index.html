@@ -819,10 +819,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
   </section>
     
-    <section class="section actions">
-    <button id="generate">Generate PDF</button>
-    <button id="resetAll" class="secondary">Reset All</button>
-  </section>
+
  </div><!-- (End) STEP 4: Sign -->
 
 <div class="wizard-step"><!-- Step 5: Generate -->
@@ -1651,11 +1648,6 @@ function resetAllData() {
   // 4. Update save status notification if standard helper exists
   if (typeof showSaveStatus === "function") showSaveStatus();
 }
-
-  /* ---------- Wire buttons ---------- */
-$("generate").addEventListener("click", fillPDF);
-$("resetAll").addEventListener("click", resetAll);
-document.querySelectorAll(".persist").forEach(autoBindSave);
 
 
 // ---------- SECTION TOGGLE LOGIC ----------
