@@ -1610,42 +1610,15 @@ function resetAllData() {
   const radioGroups = ["Paymentmodetype", "Paymentmethodtype", "Changesignature"];
   radioGroups.forEach(group => localStorage.removeItem(group));
 
-  // 3. Reset Signature Previews and clear signature keys dynamically
+  // Reset Signature Previews
   document.querySelectorAll("[data-sig-role]").forEach(block => {
-    const role = block.dataset.sigRole; // e.g., 'simple_owner', 'simple_witness', etc.
+    const role = block.dataset.sigRole;
     const previewEl = block.querySelector("[data-sig-preview]");
-    const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "Simple";
-    
-    // Remove signature storage key
-    localStorage.removeItem(`sig_${formId}_${role}`);
-    localStorage.removeItem(`sig_${role}`);
-
-    // Clean human-readable label format matching the target roles
-    const cleanRoleName = role.replace(/^simple_/, "");
-    const formattedTitle = cleanRoleName.charAt(0).toUpperCase() + cleanRoleName.slice(1);
-    
     if (previewEl) {
-      previewEl.innerHTML = `<span>Tap to Sign (${formattedTitle})</span>`;
+      previewEl.innerHTML = `<span>Tap to Sign (${role.charAt(0).toUpperCase() + role.slice(1)})</span>`;
     }
   });
 
-  // Fallback signature reset if element data attributes aren't used
-  const sigFallbackMap = {
-    "preview_simple_owner": "Policy Owner",
-    "preview_simple_witness": "Witness",
-    "preview_simple_assignee": "Assignee",
-    "preview_simple_oldsig": "Old Signature",
-    "preview_simple_newsig": "New Signature"
-  };
-
-  Object.keys(sigFallbackMap).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.innerHTML = `<span>Tap to Sign (${sigFallbackMap[id]})</span>`;
-    }
-  });
-
-  // 4. Update save status notification if standard helper exists
   if (typeof showSaveStatus === "function") showSaveStatus();
 }
 
