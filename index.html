@@ -951,6 +951,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
 
 // ----------------- Section inclusion helper -----------------
+// 1. Map section container IDs to their controlling checkbox IDs
 const CONTROLLER_BY_SECTION = {
   UpdateDetails: "Updatedetails",
   ChangePaymentModeSection: "Changepaymentmode",
@@ -962,63 +963,43 @@ const CONTROLLER_BY_SECTION = {
   UpdateNomineeDetails: "Simple_Update_Nominee"
 };
 
-// Returns true if a DOM input (by id) should be exported to the PDF.
-// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
-// that is currently UNchecked, returns false (skip).
-function shouldIncludeFieldByUI(fieldId) {
-  const el = document.getElementById(fieldId);
-  if (!el) return true; // if element isn't present in DOM, include by default
-  let parent = el;
-  while (parent && parent !== document.body) {
-    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
-      const controllerId = CONTROLLER_BY_SECTION[parent.id];
-      const cb = document.getElementById(controllerId);
-      if (cb && !cb.checked) return false; // section unticked → skip
+// 2. Helper to sync visibility of a single section based on its checkbox state
+function syncSectionVisibility(sectionId) {
+  const controllerId = CONTROLLER_BY_SECTION[sectionId];
+  const sectionEl = document.getElementById(sectionId);
+  const controllerCb = document.getElementById(controllerId);
+
+  if (sectionEl && controllerCb) {
+    // Show section if checked, hide if unchecked
+    sectionEl.style.display = controllerCb.checked ? "block" : "none";
+  }
+}
+
+// 3. Sync ALL sections immediately when DOM is ready
+function initSectionVisibility() {
+  Object.keys(CONTROLLER_BY_SECTION).forEach(sectionId => {
+    syncSectionVisibility(sectionId);
+
+    // Also attach 'change' listener so future clicks toggle visibility
+    const controllerId = CONTROLLER_BY_SECTION[sectionId];
+    const controllerCb = document.getElementById(controllerId);
+    if (controllerCb && !controllerCb.dataset.bound) {
+      controllerCb.addEventListener("change", () => {
+        syncSectionVisibility(sectionId);
+      });
+      controllerCb.dataset.bound = "true"; // Prevent duplicate listeners
     }
-    parent = parent.parentElement;
-  }
-  return true;
+  });
 }
 
-// Helper to map multiple role checkboxes → one shared PDF checkbox
-function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  // **NEW LOGIC: Check if the main 'Update Customer Details' section is enabled**
-  const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
-  if (!updateDetailsEnabled) {
-      try {
-          // If the main section is unticked, force the shared PDF checkbox to uncheck.
-          pdfDoc.getForm().getCheckBox(pdfFieldName).uncheck();
-      } catch (e) {}
-      return; // Stop here, don't check child elements
-  }
+// 4. Run initialization on page load
+document.addEventListener("DOMContentLoaded", initSectionVisibility);
 
-  // OLD LOGIC: Only proceed if the main parent section is ticked
-// NEW LOGIC: Only proceed if the main parent section is ticked
-const anyChecked = htmlIds.some(id => {
-  const el = document.getElementById(id);
-  
-  // Determine the controlling Role checkbox ID based on the element ID
-  let roleControllerId;
-  if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
-  else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
-  else if (id.includes("Nominee")) roleControllerId = "Simple_Update_Nominee";
-  
-  const roleController = document.getElementById(roleControllerId);
-
-  // A shared field is considered checked ONLY IF:
-  // 1. The individual detail checkbox is checked (el.checked)
-  // 2. The corresponding Role checkbox is checked (roleController?.checked)
-  return el && el.checked && roleController && roleController.checked;
-});
-  
-  try {
-    const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
-    if (anyChecked) field.check();
-    else field.uncheck();
-  } catch (e) {
-    console.warn(`PDF checkbox ${pdfFieldName} not found`);
-  }
+// Fallback in case DOMContentLoaded has already fired before script execution
+if (document.readyState === "interactive" || document.readyState === "complete") {
+  initSectionVisibility();
 }
+
 
 /* ---------- Date Set Today Button ---------- */  
 function setSignedDateToday() {
