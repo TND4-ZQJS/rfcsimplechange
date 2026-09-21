@@ -951,7 +951,6 @@ window.addEventListener("DOMContentLoaded", () => {
     
 
 // ----------------- Section inclusion helper -----------------
-// 1. Map section container IDs to their controlling checkbox IDs
 const CONTROLLER_BY_SECTION = {
   UpdateDetails: "Updatedetails",
   ChangePaymentModeSection: "Changepaymentmode",
@@ -963,42 +962,90 @@ const CONTROLLER_BY_SECTION = {
   UpdateNomineeDetails: "Simple_Update_Nominee"
 };
 
-// 2. Helper to sync visibility of a single section based on its checkbox state
+/**
+ * Clears/erases all input fields inside a given container element.
+ */
+function clearSectionInputs(containerEl) {
+  if (!containerEl) return;
+
+  // Clear text inputs, textareas, selects, and checkboxes/radios
+  const inputs = containerEl.querySelectorAll("input, select, textarea");
+  inputs.forEach(input => {
+    const type = input.type ? input.type.toLowerCase() : "";
+
+    if (type === "checkbox" || type === "radio") {
+      if (input.checked) {
+        input.checked = false;
+        // Trigger a change event in case other listeners depend on sub-checkboxes
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    } else if (type === "select-one" || type === "select-multiple") {
+      input.selectedIndex = -1;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    } else {
+      input.value = "";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  });
+}
+
+/**
+ * Syncs the visual state of a section and manages field clearing.
+ */
 function syncSectionVisibility(sectionId) {
   const controllerId = CONTROLLER_BY_SECTION[sectionId];
   const sectionEl = document.getElementById(sectionId);
   const controllerCb = document.getElementById(controllerId);
 
-  if (sectionEl && controllerCb) {
-    // Show section if checked, hide if unchecked
-    sectionEl.style.display = controllerCb.checked ? "block" : "none";
+  if (!sectionEl || !controllerCb) return;
+
+  if (controllerCb.checked) {
+    // Show section (Remove hidden attribute / restore display)
+    sectionEl.style.display = ""; 
+    sectionEl.classList.remove("hidden", "d-none"); // Removes common framework hidden classes
+  } else {
+    // 1. Hide section
+    sectionEl.style.display = "none";
+
+    // 2. Erase/Clear all field values inside this section when unchecked
+    clearSectionInputs(sectionEl);
   }
 }
 
-// 3. Sync ALL sections immediately when DOM is ready
+/**
+ * Binds event listeners and synchronizes all section states.
+ */
 function initSectionVisibility() {
   Object.keys(CONTROLLER_BY_SECTION).forEach(sectionId => {
-    syncSectionVisibility(sectionId);
-
-    // Also attach 'change' listener so future clicks toggle visibility
     const controllerId = CONTROLLER_BY_SECTION[sectionId];
     const controllerCb = document.getElementById(controllerId);
-    if (controllerCb && !controllerCb.dataset.bound) {
-      controllerCb.addEventListener("change", () => {
-        syncSectionVisibility(sectionId);
-      });
-      controllerCb.dataset.bound = "true"; // Prevent duplicate listeners
+
+    if (controllerCb) {
+      // Sync initial state on load
+      syncSectionVisibility(sectionId);
+
+      // Attach change listener if not already bound
+      if (!controllerCb.dataset.bound) {
+        controllerCb.addEventListener("change", () => {
+          syncSectionVisibility(sectionId);
+        });
+        controllerCb.dataset.bound = "true";
+      }
     }
   });
 }
 
-// 4. Run initialization on page load
+// ---------------- Initialization Listeners ----------------
+
+// Run as soon as DOM structure is ready
 document.addEventListener("DOMContentLoaded", initSectionVisibility);
 
-// Fallback in case DOMContentLoaded has already fired before script execution
-if (document.readyState === "interactive" || document.readyState === "complete") {
-  initSectionVisibility();
-}
+// Run again on full page load (handles images, CSS, and browser autofill restoration)
+window.addEventListener("load", initSectionVisibility);
+
+// Handles back/forward cache restoration in browsers
+window.addEventListener("pageshow", initSectionVisibility);
+
 
 
 /* ---------- Date Set Today Button ---------- */  
