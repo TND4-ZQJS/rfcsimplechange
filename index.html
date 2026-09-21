@@ -254,7 +254,6 @@ body {
   opacity: 1;
 }
 
-
   /* Signature preview tiles */
   .sig-preview{
     width:100%; height:150px; border:1px dashed #bbb; border-radius:10px;
@@ -284,7 +283,7 @@ body {
  /* Generate PDF Page */
   .action-center {max-width: 800px;margin: 40px auto;padding: 0 20px;box-sizing: border-box;}
   .pdf-grid {display: flex;flex-direction: column;gap: 12px;}
-  .doc-row {display: flex;align-items: center;justify-content: space-between;background: #ffffff;padding: 16px;border-radius: 14px;border: 1px solid #d2d2d7box-sizing: border-box;}
+  .doc-row {display: flex;align-items: center;justify-content: space-between;background: #ffffff;padding: 16px;border-radius: 14px;border: 1px solid #d2d2d7;box-sizing: border-box;}
   .doc-info {display: flex;flex-direction: column;}
   .doc-title {font-size: 15px; color: #1d1d1f;}
   .doc-sub {font-size: 12px; color: #86868b;}
@@ -342,11 +341,7 @@ body {
 /* Navigation Footer */
 .wizard-actions {display: flex;justify-content: space-between;margin-top: 30px;padding: 20px 0;border-top: 1px solid var(--line);}
 
-/* Signature preview tiles */
-
- /* ============================================================
-    PREMIUM iOS BACK NAVIGATION ENGINE (Optimized)
-   ============================================================ */
+/* PREMIUM iOS BACK NAVIGATION ENGINE */
 .back-navigation-container {max-width: 940px;margin: 20px auto 0 auto;padding: 0 24px;display: flex;align-items: center;}
 a.back-link,
 a.back-link span {text-decoration: none !important;text-decoration-line: none !important;border-bottom: none !important;box-shadow: none !important;outline: none !important;}
@@ -355,8 +350,7 @@ a.back-link {display: inline-flex;align-items: center;gap: 2px;color:#007aff;
             font-size: 16px;font-weight: 400;letter-spacing: -0.3px;transition: opacity 0.15s ease;cursor: pointer;-webkit-user-select: none;user-select: none;}
 a.back-link:hover {opacity: 0.7;}
 a.back-link:active {opacity: 0.3;}
-a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff !important;fill: none; /* Ensures vector shapes don't accidentally bloat */}
-   
+a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff !important;fill: none;}
 
   /* Save indicator */
   #saveStatus{
@@ -379,7 +373,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
             <div class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </div>
-     <nav class="nav-menu" id="navMenu">
+            <nav class="nav-menu" id="navMenu">
                 <a href="dashboard.html" class="nav-item">Operational Hub</a>
                 <a href="cipro-experience.html" class="nav-item">CI Pro Experience</a>
                 <a href="eposbuddy.html" class="nav-item">EPOS Buddy</a>
@@ -401,7 +395,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 
       <section class="hero" style="padding-top: 0px; padding-bottom: 20px; text-align: left;">
             <span class="badge">Request for Change of Customer Details and Payment Method</span>
-        </section>
+      </section>
 
   <!-- Progress Tracker -->
   <div class="step-indicator" id="stepIndicator">
@@ -411,7 +405,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     <div class="step"><span class="step-num">4</span>Sign</div>
     <div class="step"><span class="step-num">5</span>Generate</div>
   </div>
-  <!-- (END) Progress Tracker -->
 
 <div class="wizard-step active"><!-- STEP 1: Policy -->
   <section class="section">
@@ -439,7 +432,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </section>
 
     <section class="section">
-<h2>Policy Owner Details</h2>
+      <h2>Policy Owner Details</h2>
       <div class="row">
       <label style="display:flex; align-items:center; gap:4px; cursor:pointer; background: #f0f7ff; padding: 5px; border-radius: 8px;">
       <input type="checkbox" id="same_as_insured">
@@ -460,8 +453,8 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </section>
 
     <section class="section">
-<h2>Witness Details</h2>
-     <div class="row">
+      <h2>Witness Details</h2>
+      <div class="row">
       <label style="flex:1">Name of Witness
         <input id="Simple_SignWitness_Name" class="persist" type="text" placeholder="Enter name">
       </label>
@@ -471,14 +464,14 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
         <input id="Simple_SignWitness_NIRC" class="persist" type="text" placeholder="Enter NRIC/Passport">
       </label>
       <label style="flex:1">Mobile No.
-        <input id="Simple_SignWitness_Mobile" class="persist" type="text" placeholder="Entet mobile no.">
+        <input id="Simple_SignWitness_Mobile" class="persist" type="text" placeholder="Enter mobile no.">
       </label>
     </div>
     </section>
 
     <section class="section">
-<h2>Assignee Details</h2>
-  <div class="row">
+      <h2>Assignee Details</h2>
+      <div class="row">
       <label style="flex:1">Name of Assignee
         <input id="Simple_SignAssignee_Name" class="persist" type="text" placeholder="Enter name">
       </label>
@@ -496,7 +489,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   <section class="section">
     <label>
     <span style="font-weight:500; color:var(--accent);">Choose one or more request <small class="muted">(only request that is "checked in the box" will appear)</small></span></label>
-    <div id="UserOption" class="grid-2">
+    <div class="grid-2">
       <div>
         <label class="info-label"><input id="Updatedetails" class="persist" type="checkbox">A. Update Customer Details</label>
       </div>
@@ -515,7 +508,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
 </section>
 
-
   <!-- SECTION: Update Customer Details -->
   <section class="section" id="UpdateDetails">
     <h2>A. Update Customer Details</h2>
@@ -530,98 +522,96 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       <label class="inline"><input class="persist" id="Simple_Update_Nominee" type="checkbox">Nominee/Assignee/Trustee</label>
         </div>
      
-
        <section class="section" id="UpdateInsuredDetails">
-    <h3>Insured - Update Details</h3>
+        <h3>Insured - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredName" type="checkbox">Name</label>
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredName" type="checkbox">Name</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredName_Text" type="text" placeholder="Enter insured's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredDOB" type="checkbox">Date of Birth</label>
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredDOB" type="checkbox">Date of Birth</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredDOB_Text" type="text" placeholder="Enter insured's DOB">
         </div>
-          <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredNIRC" type="checkbox">IC/BC/Passport No.</label>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredNIRC" type="checkbox">IC/BC/Passport No.</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNIRC_Text" type="text" placeholder="Enter insured's IC/BC/Passport">
         </div>
         <div class="row">
-          <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredSex" type="checkbox">Sex</label>
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredSex" type="checkbox">Sex</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredSex_Text" type="text" placeholder="Enter insured's sex">
         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_InsuredCountry" type="checkbox">Country of Birth</label>
-         <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredCountry_Text" type="text" placeholder="Enter insured's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_InsuredNationality" type="checkbox">Nationality</label>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredCountry" type="checkbox">Country of Birth</label>
+          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredCountry_Text" type="text" placeholder="Enter insured's Country of Birth">
+        </div>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_InsuredNationality" type="checkbox">Nationality</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNationality_Text" type="text" placeholder="Enter insured's nationality">
-         </div>
+        </div>
     </section>
 
-        <section class="section" id="UpdatePODetails">
-    <h3>Policy Owner - Update Details</h3>
+    <section class="section" id="UpdatePODetails">
+        <h3>Policy Owner - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_POName" type="checkbox">Name</label>
+          <label class="inline"><input class="persist" id="Simple_Update_POName" type="checkbox">Name</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POName_Text" type="text" placeholder="Enter policy owner's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_PODOB" type="checkbox">Date of Birth</label>
+          <label class="inline"><input class="persist" id="Simple_Update_PODOB" type="checkbox">Date of Birth</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PODOB_Text" type="text" placeholder="Enter policy owner's DOB">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_PONIRC" type="checkbox">IC/BC/Passport No.</label>
+          <label class="inline"><input class="persist" id="Simple_Update_PONIRC" type="checkbox">IC/BC/Passport No.</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONIRC_Text" type="text" placeholder="Enter policy owner's IC/BC/Passport">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_POSex" type="checkbox">Sex</label>
+          <label class="inline"><input class="persist" id="Simple_Update_POSex" type="checkbox">Sex</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POSex_Text" type="text" placeholder="Enter policy owner's sex">
         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_POCountry" type="checkbox">Country of Birth</label>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_POCountry" type="checkbox">Country of Birth</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POCountry_Text" type="text" placeholder="Enter policy owner's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_PONationality" type="checkbox">Nationality</label>
+        </div>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_PONationality" type="checkbox">Nationality</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONationality_Text" type="text" placeholder="Enter policy owner's nationality">
-         </div>
+        </div>
     </section>
 
-        <section class="section" id="UpdateNomineeDetails">
-    <h3>Nominee/Trustee/Assignee - Update Details</h3>
+    <section class="section" id="UpdateNomineeDetails">
+        <h3>Nominee/Trustee/Assignee - Update Details</h3>
         <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeName" type="checkbox">Name</label>
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeName" type="checkbox">Name</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeName_Text" type="text" placeholder="Enter nominee/trustee/assignee's name">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeDOB" type="checkbox">Date of Birth</label>
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeDOB" type="checkbox">Date of Birth</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeDOB_Text" type="text" placeholder="Enter nominee/trustee/assignee's DOB">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeNIRC" type="checkbox">IC/BC/Passport No.</label>
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeNIRC" type="checkbox">IC/BC/Passport No.</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNIRC_Text" type="text" placeholder="Enter nominee/trustee/assignee's IC/BC/Passport">
         </div>
         <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeSex" type="checkbox">Sex</label>
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeSex" type="checkbox">Sex</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeSex_Text" type="text" placeholder="Enter nominee/trustee/assignee's sex">
         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_NomineeCountry" type="checkbox">Country of Birth</label>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeCountry" type="checkbox">Country of Birth</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeCountry_Text" type="text" placeholder="Enter nominee/trustee/assignee's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_NomineeNationality" type="checkbox">Nationality</label>
+        </div>
+        <div class="row">
+          <label class="inline"><input class="persist" id="Simple_Update_NomineeNationality" type="checkbox">Nationality</label>
           <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNationality_Text" type="text" placeholder="Enter nominee/trustee/assignee's nationality">
-         </div>
+        </div>
     </section>
 
   </section>
 
-    <!-- SECTION: Change of Payment Mode -->
+  <!-- SECTION: Change of Payment Mode -->
 <section class="section" id="ChangePaymentModeSection">
   <h2>B. Change of Payment Mode</h2>
-  <div id="UserOption" class="grid-2">
+  <div class="grid-2">
     <div>
       <label class="inline"><input id="Simple_Payment_Annual" value="Simple_Payment_Annual" class="persist" name="Paymentmodetype" type="radio">Annual</label>
     </div>
@@ -640,7 +630,7 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 <!-- SECTION: Change of Payment Type -->
 <section class="section" id="ChangePaymentMethodSection">
   <h2>C. Change of Payment Method</h2>
-  <div id="UserOption" class="grid-2">
+  <div class="grid-2">
     <div>
       <label class="inline"><input id="Simple_Payment_Internet" value="Simple_Payment_Internet" class="persist" name="Paymentmethodtype" type="radio">Internet Banking</label>
     </div>
@@ -650,11 +640,10 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </div>
 </section>
 
-  
 <!-- SECTION: Change Signature -->
 <section class="section" id="ChangeSignatureSection">
   <h2>D. Change of Signature</h2>
-  <div id="UserOption" class="grid-2">
+  <div class="grid-2">
     <div>
       <label class="inline">
         <input id="Simple_ChangeSig_Insured" value="Simple_ChangeSig_Insured" class="persist" name="Changesignature" type="radio">Insured
@@ -677,25 +666,22 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
   </div>
 
-
       <div class="section" data-sig-role="oldsig" data-sig-title="Sign: Old Signature">
-     <div class="sig-preview" data-sig-preview>
-      <span>Tap to Sign (Old Signature)</span>
-     </div>
-    
-    <div class="row">
-      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
-    </div>
+        <div class="sig-preview" data-sig-preview>
+          <span>Tap to Sign (Old Signature)</span>
+        </div>
+        <div class="row">
+          <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
+        </div>
       </div>
 
       <div class="section" data-sig-role="newsig" data-sig-title="Sign: New Signature">
-     <div class="sig-preview" data-sig-preview>
-      <span>Tap to Sign (New Signature)</span>
-     </div>
-    
-    <div class="row">
-      <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
-    </div>
+        <div class="sig-preview" data-sig-preview>
+          <span>Tap to Sign (New Signature)</span>
+        </div>
+        <div class="row">
+          <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
+        </div>
       </div>
   </section>
 
@@ -724,7 +710,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       <label style="flex:1">Signed at (State)
         <select id="Simple_SignState" class="persist">
           <option value="">-- Select State --</option>
-          <!-- Same bel set used in your reference -->
           <option>SELANGOR</option><option>K.LUMPUR</option><option>MELAKA</option><option>JOHOR</option>
           <option>N.SEMBILAN</option><option>PENANG</option><option>PERAK</option><option>SABAH</option>
           <option>SARAWAK</option><option>KELANTAN</option><option>PERLIS</option><option>T'GANU</option>
@@ -763,8 +748,8 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
 
       <div class="row">
-  <button type="button" class="btn-set-today ghost" onclick="setSignedDateToday()">Today</button>
-</div>
+        <button type="button" class="btn-set-today ghost" onclick="setSignedDateToday()">Today</button>
+      </div>
       
   </section>
 
@@ -773,10 +758,10 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     <h2>Signature of Policyowner</h2>
 
       <div class="row">
-  <label style="flex:1">Name: 
-    <span id="Simple_PO_Name_Display" style="font-weight: 600;">-</span>
-  </label>
-</div>
+        <label style="flex:1">Name: 
+          <span id="Simple_PO_Name_Display" style="font-weight: 600;">-</span>
+        </label>
+      </div>
 
     <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Policyowner)</span>
@@ -790,12 +775,11 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   <section class="section" data-sig-role="witness" data-sig-title="Sign: Witness">
     <h2>Signature of Witness</h2>
 
- <div class="row">
-  <label style="flex:1">Name: 
-    <span id="Simple_Witness_Name_Display" style="font-weight: 600;">-</span>
-  </label>
-</div>
-
+    <div class="row">
+      <label style="flex:1">Name: 
+        <span id="Simple_Witness_Name_Display" style="font-weight: 600;">-</span>
+      </label>
+    </div>
     <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Witness)</span>
     </div>
@@ -804,15 +788,15 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
     </div>
   </section>
   
-    <!-- SECTION: Assignee -->
+  <!-- SECTION: Assignee -->
   <section class="section" data-sig-role="assignee" data-sig-title="Sign: Assignee">
     <h2>Signature of Assignee</h2>
 
-  <div class="row">
-  <label style="flex:1">Name: 
-    <span id="Simple_Assignee_Name_Display" style="font-weight: 600;">-</span>
-  </label>
-</div>
+    <div class="row">
+      <label style="flex:1">Name: 
+        <span id="Simple_Assignee_Name_Display" style="font-weight: 600;">-</span>
+      </label>
+    </div>
 
     <div class="sig-preview" data-sig-preview>
       <span>Tap to Sign (Assignee)</span>
@@ -821,7 +805,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
       <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
     </div>
   </section>
-    
 
  </div><!-- (End) STEP 4: Sign -->
 
@@ -830,7 +813,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   <h2>Generate PDF / Reset Form</h2>
   <div class="action-center">
     
-    <!-- Restored pdf-grid wrapper here -->
     <div class="pdf-grid">
       <div class="doc-row">
         <div class="doc-info">
@@ -874,7 +856,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 </div>
     
     <div id="saveStatus">Saved</div>
-  </section>
 
   <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="Back to top">
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 16 16">
@@ -882,7 +863,8 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </svg>
 </button>
 
-    
+</main>
+
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>    
 <script>
@@ -894,8 +876,7 @@ const FORM_ID = "Simple";
 /* ---------- DOM Helpers ---------- */
 const $ = (id) => document.getElementById(id);
 
-// ----------------- Section inclusion helper -----------------
-// ----------------- Section inclusion helper -----------------
+// Section inclusion hierarchy map
 const CONTROLLER_BY_SECTION = {
   UpdateDetails: "Updatedetails",
   ChangePaymentModeSection: "Changepaymentmode",
@@ -933,9 +914,6 @@ function shouldIncludeFieldByUI(fieldId) {
  * Uses shouldIncludeFieldByUI to ensure nested parent/child controller hierarchy is respected.
  */
 function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  // A shared checkbox is checked if AT LEAST ONE element is:
-  // 1. Physically checked in the DOM
-  // 2. Belongs to a visible/enabled parent section hierarchy
   const anyChecked = htmlIds.some(id => {
     const el = document.getElementById(id);
     return el && el.checked && shouldIncludeFieldByUI(id);
@@ -954,7 +932,7 @@ function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
 }
 
 /**
- * Clears DOM values when a section controller is unchecked
+ * Clears DOM values and LocalStorage when a section controller is unchecked
  */
 function handleSectionToggle(controllerId, sectionContainerId) {
   const controller = document.getElementById(controllerId);
@@ -962,7 +940,6 @@ function handleSectionToggle(controllerId, sectionContainerId) {
   if (!controller || !container) return;
 
   if (!controller.checked) {
-    // Uncheck and clear all inputs within the container
     const inputs = container.querySelectorAll("input, select, textarea");
     inputs.forEach(input => {
       if (input.type === "checkbox" || input.type === "radio") {
@@ -970,21 +947,35 @@ function handleSectionToggle(controllerId, sectionContainerId) {
       } else {
         input.value = "";
       }
+      if (input.id) {
+        localStorage.removeItem(input.id);
+      }
     });
   }
 }
 
-
-function safeSetText(form, name, text){
-  try{ form.getTextField(name).setText(String(text || "")); } catch(e){ }
+function safeSetText(form, name, text, fontSize = 9){
+  try { 
+    const tf = form.getTextField(name);
+    tf.setText(String(text || "")); 
+    if (typeof fontSize === "number") {
+      tf.setFontSize(fontSize);
+    }
+  } catch(e){ }
 }
+
 function safeCheck(form, name, checked){
   try{ const cb = form.getCheckBox(name); if (checked) cb.check(); else cb.uncheck(); } catch(e){ }
+}
+
+function getFontSizeForField(fieldName) {
+  return 9; // Standard font size fallback for form text
 }
 
 /* ---------- Save Indicator & Persistence ---------- */
 const saveStatusEl = $("saveStatus");
 function showSaveStatus(){
+  if (!saveStatusEl) return;
   saveStatusEl.style.opacity = '1';
   clearTimeout(saveStatusEl._timer);
   saveStatusEl._timer = setTimeout(()=> saveStatusEl.style.opacity = '0', 1200);
@@ -1009,6 +1000,20 @@ function autoBindSave(el){
   el.addEventListener((el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'input', ()=> saveElValue(el));
 }
 
+function loadFromLocalStorage() {
+  document.querySelectorAll("input, select, textarea").forEach(el => {
+    if (!el.id) return;
+    const saved = localStorage.getItem(el.id);
+    if (saved !== null) {
+      if (el.type === "checkbox" || el.type === "radio") {
+        el.checked = (saved === "true");
+      } else {
+        el.value = saved;
+      }
+    }
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("input, select, textarea").forEach(el => {
     if (!el.id) return;
@@ -1029,80 +1034,62 @@ window.addEventListener("DOMContentLoaded", () => {
   initSignatureFields();
   loadFromLocalStorage();
 });
-    
 
 /* ---------- Date Set Today Button ---------- */  
 function setSignedDateToday() {
   const now = new Date();
 
-  // 1. Format Day (e.g., 5 -> "05")
   const dayStr = String(now.getDate()).padStart(2, '0');
-
-  // 2. Format Month string matching select options
   const monthNames = [
     "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
   ];
   const monthStr = monthNames[now.getMonth()];
-
-  // 3. Format Year (e.g., "2026")
   const yearStr = String(now.getFullYear());
 
-  // 4. Target elements
   const daySelect = document.getElementById('Simple_SignDay');
   const monthSelect = document.getElementById('Simple_SignMonth');
   const yearSelect = document.getElementById('Simple_SignYear');
 
   if (daySelect && monthSelect && yearSelect) {
-    // Set values
     daySelect.value = dayStr;
     monthSelect.value = monthStr;
     yearSelect.value = yearStr;
 
-    // Dispatch change event to trigger local storage auto-save listeners if present
     daySelect.dispatchEvent(new Event('change', { bubbles: true }));
     monthSelect.dispatchEvent(new Event('change', { bubbles: true }));
     yearSelect.dispatchEvent(new Event('change', { bubbles: true }));
 
-    // Explicitly write to localStorage if you store form fields by ID directly
     saveToLocalStorage('Simple_SignDay', dayStr);
     saveToLocalStorage('Simple_SignMonth', monthStr);
     saveToLocalStorage('Simple_SignYear', yearStr);
   }
 }
 
-// Helper function for local storage persistence
 function saveToLocalStorage(id, value) {
   try {
-    // If you use a single object key for form data, adapt this accordingly
     localStorage.setItem(id, value);
-    
-    // Optional: trigger your save indicator toast if you have one
-    const saveStatus = document.getElementById('saveStatus');
-    if (saveStatus) {
-      saveStatus.style.opacity = '1';
-      setTimeout(() => { saveStatus.style.opacity = '0'; }, 1500);
-    }
+    showSaveStatus();
   } catch (e) {
     console.error('Failed to save to localStorage:', e);
   }
 }
 
-
 /* ---------- Signature Engine ---------- */
 let sigTarget = null;
 const sigModal = $("sigModal");
 const sigCanvas = $("sigCanvas");
-const sigCtx = sigCanvas.getContext("2d");
+const sigCtx = sigCanvas ? sigCanvas.getContext("2d") : null;
 
-const signaturePad = new SignaturePad(sigCanvas, {
+const signaturePad = sigCanvas ? new SignaturePad(sigCanvas, {
   minWidth: 0.7,
   maxWidth: 2.5,
   penColor: "black",
   backgroundColor: "rgba(0,0,0,0)"
-});
+}) : null;
 
 function resizeCanvas() {
+  if (!sigCanvas || !signaturePad) return;
   const ratio = Math.max(window.devicePixelRatio || 1, 1);
   const storageKey = sigTarget ? `sig_${FORM_ID}_${sigTarget}` : null;
   const savedFromStorage = storageKey ? localStorage.getItem(storageKey) : null;
@@ -1135,7 +1122,7 @@ function closeSigModal() {
 }
 
 $("sigDone")?.addEventListener("click", () => {
-  if (!sigTarget || signaturePad.isEmpty()) return;
+  if (!sigTarget || !signaturePad || signaturePad.isEmpty()) return;
 
   const dataURL = sigCanvas.toDataURL("image/png");
   localStorage.setItem(`sig_${FORM_ID}_${sigTarget}`, dataURL);
@@ -1148,7 +1135,7 @@ $("sigDone")?.addEventListener("click", () => {
   closeSigModal();
 });
 
-$("sigClear")?.addEventListener("click", () => signaturePad.clear());
+$("sigClear")?.addEventListener("click", () => signaturePad?.clear());
 $("sigCancel")?.addEventListener("click", closeSigModal);
 window.addEventListener("resize", resizeCanvas);
 
@@ -1177,8 +1164,6 @@ function initSignatureFields() {
 async function embedSignatureToPdf(pdfDoc, pageIndex, options) {
   const { role, x, y, factor = 0.50 } = options;
 
-  // 1. Construct localStorage key matching your signature engine format
-  // Tries `sig_${FORM_ID}_${role}`, then `sig_${role}`, then `${role}`
   const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "Simple";
   const primaryKey = `sig_${formId}_${role}`;
   
@@ -1186,24 +1171,20 @@ async function embedSignatureToPdf(pdfDoc, pageIndex, options) {
                 || localStorage.getItem(`sig_${role}`) 
                 || localStorage.getItem(role);
 
-  // 2. Validate data format
   if (!sigDataUri || !sigDataUri.startsWith("data:image/png")) {
     console.warn(`No valid PNG signature found for role: ${role} (key tried: ${primaryKey})`);
     return;
   }
 
   try {
-    // 3. Embed PNG into pdf-lib
     const img = await pdfDoc.embedPng(sigDataUri);
     const originalSize = img.size();
 
-    // 4. Calculate dimensions maintaining aspect ratio
     const baseWidth = 250;
     const aspectRatio = originalSize.width / originalSize.height;
     const renderWidth = baseWidth * factor;
     const renderHeight = (baseWidth / aspectRatio) * factor;
 
-    // 5. Get target page (pdf-lib pages are 0-indexed)
     const pages = pdfDoc.getPages();
     const targetPage = pages[pageIndex];
 
@@ -1222,40 +1203,32 @@ async function embedSignatureToPdf(pdfDoc, pageIndex, options) {
   }
 }
 
-
 /* ---------- Combined Insured -> Policyowner Sync Helper ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements
   const sameAsInsuredCheckbox = document.getElementById("same_as_insured");
 
-  // Source Elements (Insured)
   const insuredName = document.getElementById("Simple_BasicInfo_InsuredName");
   const insuredIC   = document.getElementById("Simple_BasicInfo_InsuredNIRC");
 
-  // Target Elements (Policyowner)
   const poName = document.getElementById("Simple_SignPO_Name");
   const poIC   = document.getElementById("Simple_SignPO_NIRC");
 
-  // Helper to safely format value to Uppercase
   const toUpper = (val) => (val || "").toUpperCase();
 
-  // Helper to update field + localStorage + save status
   function setAndPersist(el, value) {
     if (!el) return;
     el.value = value;
     localStorage.setItem(el.id, value);
-    if (typeof showSaveStatus === "function") showSaveStatus();
+    showSaveStatus();
   }
 
-  // Helper to clear field + remove from localStorage + save status
   function clearAndRemovePersist(el) {
     if (!el) return;
     el.value = "";
     localStorage.removeItem(el.id);
-    if (typeof showSaveStatus === "function") showSaveStatus();
+    showSaveStatus();
   }
 
-  /* --- 1. POLICYOWNER SYNC (Conditional on Checkbox) --- */
   function syncPOFromInsured() {
     if (!poName || !poIC || !insuredName || !insuredIC) return;
     setAndPersist(poName, toUpper(insuredName.value));
@@ -1272,8 +1245,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!poName || !poIC) return;
     poName.readOnly = locked;
     poIC.readOnly = locked;
-    poName.classList.toggle("dimmed", locked);
-    poIC.classList.toggle("dimmed", locked);
   }
 
   function handleSameAsInsuredCheckboxChange() {
@@ -1283,14 +1254,11 @@ document.addEventListener("DOMContentLoaded", () => {
       syncPOFromInsured();
       setPOLocked(true);
     } else {
-      // Clear data & remove from localStorage when unchecked
       clearPOFields();
       setPOLocked(false);
     }
   }
 
-  /* --- 2. EVENT BINDINGS & INITIALIZATION --- */
-  // Live Sync on Insured Typing
   if (insuredName) {
     insuredName.addEventListener("input", () => {
       if (sameAsInsuredCheckbox && sameAsInsuredCheckbox.checked) {
@@ -1307,12 +1275,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Checkbox Event Listener
   if (sameAsInsuredCheckbox) {
     sameAsInsuredCheckbox.addEventListener("change", handleSameAsInsuredCheckboxChange);
   }
 
-  // Initial Sync on Page Load
   setTimeout(() => {
     if (sameAsInsuredCheckbox && sameAsInsuredCheckbox.checked) {
       syncPOFromInsured();
@@ -1336,11 +1302,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!displayEl) return;
 
     const sourceInput = document.getElementById(storageKey);
-    
-    // Priority:
-    // 1. Direct typed value (if from live typing event)
-    // 2. localStorage value
-    // 3. Current input DOM value
     const savedInStorage = localStorage.getItem(storageKey);
     const inputVal = sourceInput ? sourceInput.value : "";
     
@@ -1357,211 +1318,184 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Bind live typing listeners to inputs
   Object.entries(fieldMap).forEach(([storageKey, displayId]) => {
     const sourceInput = document.getElementById(storageKey);
     if (sourceInput) {
       sourceInput.addEventListener("input", (e) => {
         updateDisplay(storageKey, displayId, e.target.value);
       });
-      // Also listen for change/restore events
       sourceInput.addEventListener("change", () => {
         updateDisplay(storageKey, displayId);
       });
     }
   });
 
-  // 1. Immediate update
   refreshAllDisplays();
-
-  // 2. Delayed update (wait 100ms for autoBindSave / restoration script to finish putting localStorage values into the DOM inputs)
   setTimeout(refreshAllDisplays, 100);
 });
 
 /* ---------- Generate PDF ---------- */
 async function fillPDF(templateFileName, action = 'download') {
-  // Grab action buttons to disable them during generation
   const actionButtons = document.querySelectorAll('.actions button');
   actionButtons.forEach(btn => btn.disabled = true);
 
-  // Helper function to safely fetch input DOM values without crashing on missing elements
   const getValue = (id) => {
     const el = document.getElementById(id);
     return el ? el.value : "";
   };
 
-  const getChecked = (id) => {
-    const el = document.getElementById(id);
-    return el ? el.checked : false;
-  };
-
   try {
-    // 1. Fetch template PDF
     const response = await fetch(templateFileName);
     if (!response.ok) {
       throw new Error(`Failed to load template file: ${templateFileName}`);
     }
     const existingPdfBytes = await response.arrayBuffer();
 
-    // 2. Load PDF document & get interactive form
     const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-    const form = pdfDoc.getForm(); // <-- FIXED: Form initialization added
+    const form = pdfDoc.getForm();
 
-   /* ===== RADIO (UI) -> PDF CHECKBOX (fields) MAPPING ===== */
-function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
-  // Check controller checkbox ONLY if it actually exists in the DOM
-  if (controllerCheckboxId) {
-    const ctrl = document.getElementById(controllerCheckboxId);
-    if (ctrl && !ctrl.checked) {
-      pdfCheckboxNames.forEach(fieldName => safeCheck(form, fieldName, false));
-      return;
+    function mapRadioGroupToPdfCheckboxes(groupName, pdfCheckboxNames, controllerCheckboxId) {
+      if (controllerCheckboxId) {
+        const ctrl = document.getElementById(controllerCheckboxId);
+        if (ctrl && !ctrl.checked) {
+          pdfCheckboxNames.forEach(fieldName => safeCheck(form, fieldName, false));
+          return;
+        }
+      }
+
+      const activeRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+      const selectedVal = activeRadio ? activeRadio.value : (localStorage.getItem(groupName) || "");
+
+      pdfCheckboxNames.forEach(fieldName => {
+        safeCheck(form, fieldName, fieldName === selectedVal);
+      });
     }
-  }
 
-  // Find active DOM selection first, fallback to localStorage
-  const activeRadio = document.querySelector(`input[name="${groupName}"]:checked`);
-  const selectedVal = activeRadio ? activeRadio.value : (localStorage.getItem(groupName) || "");
+    mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
+      "Simple_Payment_Annual",
+      "Simple_Payment_SemiAnnual",
+      "Simple_Payment_Quarterly",
+      "Simple_Payment_Monthly"
+    ], "Changepaymentmode");
 
-  // Match against PDF checkbox names
-  pdfCheckboxNames.forEach(fieldName => {
-    safeCheck(form, fieldName, fieldName === selectedVal);
-  });
-}
+    mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
+      "Simple_Payment_FPX",
+      "Simple_Payment_Internet"
+    ], "Changepaymentmethod");
 
-// Call without controller checkbox restriction if section checkboxes aren't in HTML:
-mapRadioGroupToPdfCheckboxes("Paymentmodetype", [
-  "Simple_Payment_Annual",
-  "Simple_Payment_SemiAnnual",
-  "Simple_Payment_Quarterly",
-  "Simple_Payment_Monthly"
-], null);
+    mapRadioGroupToPdfCheckboxes("Changesignature", [
+      "Simple_ChangeSig_Insured",
+      "Simple_ChangeSig_PO",
+      "Simple_ChangeSig_Assignee",
+      "Simple_ChangeSig_Trustee"
+    ], "Changesignature");
 
-mapRadioGroupToPdfCheckboxes("Paymentmethodtype", [
-  "Simple_Payment_FPX",
-  "Simple_Payment_Internet"
-], null);
+    const fieldNames = [
+      "Simple_BasicInfo_InsuredName",
+      "Simple_BasicInfo_PolicyNo",
+      "Simple_BasicInfo_InsuredNIRC",
+      "Simple_Update_Name",
+      "Simple_Update_Insured",
+      "Simple_Update_InsuredName_Text",
+      "Simple_Update_DOB",
+      "Simple_Update_PO",
+      "Simple_Update_Nominee",
+      "Simple_Update_NIRC",
+      "Simple_Update_Sex",
+      "Simple_Update_Country",
+      "Simple_Update_Nationality",
+      "Simple_Update_InsuredDOB_Text",
+      "Simple_Update_InsuredNIRC_Text",
+      "Simple_Update_InsuredSex_Text",
+      "Simple_Update_InsuredCountry_Text",
+      "Simple_Update_InsuredNationality_Text",
+      "Simple_Update_POName_Text",
+      "Simple_Update_PODOB_Text",
+      "Simple_Update_PONIRC_Text", 
+      "Simple_Update_POSex_Text", 
+      "Simple_Update_POCountry_Text",
+      "Simple_Update_PONationality_Text",
+      "Simple_Update_NomineeName_Text",
+      "Simple_Update_NomineeDOB_Text",
+      "Simple_Update_NomineeNIRC_Text",
+      "Simple_Update_NomineeSex_Text",
+      "Simple_Update_NomineeCountry_Text",
+      "Simple_Update_NomineeNationality_Text",
+      "Simple_Update_Others_Line1",
+      "Simple_Update_Others_Line2",
+      "Simple_Update_Others_Line3",
+      "Simple_Update_Others_Line4",
+      "Simple_SignState",
+      "Simple_SignDay",
+      "Simple_SignMonth",
+      "Simple_SignYear",
+      "Simple_SignPO_Name",
+      "Simple_SignPO_NIRC",
+      "Simple_SignAssignee_Name",
+      "Simple_SignAssignee_NIRC",
+      "Simple_SignWitness_Name",
+      "Simple_SignWitness_NIRC",
+      "Simple_SignWitness_Mobile"
+    ];
 
-mapRadioGroupToPdfCheckboxes("Changesignature", [
-  "Simple_ChangeSig_Insured",
-  "Simple_ChangeSig_PO",
-  "Simple_ChangeSig_Assignee",
-  "Simple_ChangeSig_Trustee"
-], null);
+    fieldNames.forEach(fieldName => {
+      if (typeof shouldIncludeFieldByUI === "function" && !shouldIncludeFieldByUI(fieldName)) return;
 
+      const value = getValue(fieldName) || localStorage.getItem(fieldName) || "";
+      const fontSize = getFontSizeForField(fieldName);
+      safeSetText(form, fieldName, value, fontSize);
+    });
 
+    if (typeof mapSharedCheckboxToPdf === "function") {
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
+        "Simple_Update_InsuredName",
+        "Simple_Update_POName",
+        "Simple_Update_NomineeName"
+      ]);
 
-// FILL FORM FIELDS FROM LOCALSTORAGE
-const fieldNames = [
-  "Simple_BasicInfo_InsuredName",
-  "Simple_BasicInfo_PolicyNo",
-  "Simple_BasicInfo_InsuredNIRC",
-  "Simple_Update_Name",
-  "Simple_Update_Insured",
-  "Simple_Update_InsuredName_Text",
-  "Simple_Update_DOB",
-  "Simple_Update_PO",
-  "Simple_Update_Nominee",
-  "Simple_Update_NIRC",
-  "Simple_Update_Sex",
-  "Simple_Update_Country",
-  "Simple_Update_Nationality",
-  "Simple_Update_InsuredDOB_Text",
-  "Simple_Update_InsuredNIRC_Text",
-  "Simple_Update_InsuredSex_Text",
-  "Simple_Update_InsuredCountry_Text",
-  "Simple_Update_InsuredNationality_Text",
-  "Simple_Update_POName_Text",
-  "Simple_Update_PODOB_Text",
-  "Simple_Update_PONIRC_Text", 
-  "Simple_Update_POSex_Text", 
-  "Simple_Update_POCountry_Text",
-  "Simple_Update_PONationality_Text",
-  "Simple_Update_NomineeName_Text",
-  "Simple_Update_NomineeDOB_Text",
-  "Simple_Update_NomineeNIRC_Text",
-  "Simple_Update_NomineeSex_Text",
-  "Simple_Update_NomineeCountry_Text",
-  "Simple_Update_NomineeNationality_Text",
-  "Simple_Update_Others_Line1",
-  "Simple_Update_Others_Line2",
-  "Simple_Update_Others_Line3",
-  "Simple_Update_Others_Line4",
-  "Simple_SignState",
-  "Simple_SignDay",
-  "Simple_SignMonth",
-  "Simple_SignYear",
-  "Simple_SignPO_Name",
-  "Simple_SignPO_NIRC",
-  "Simple_SignAssignee_Name",
-  "Simple_SignAssignee_NIRC",
-  "Simple_SignWitness_Name",
-  "Simple_SignWitness_NIRC",
-  "Simple_SignWitness_Mobile"
-];
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
+        "Simple_Update_InsuredDOB",
+        "Simple_Update_PODOB",
+        "Simple_Update_NomineeDOB"
+      ]);
 
-fieldNames.forEach(fieldName => {
-  if (typeof shouldIncludeFieldByUI === "function" && !shouldIncludeFieldByUI(fieldName)) return;
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
+        "Simple_Update_InsuredNIRC",
+        "Simple_Update_PONIRC",
+        "Simple_Update_NomineeNIRC"
+      ]);
 
-  const value = getValue(fieldName) || localStorage.getItem(fieldName) || "";
-  const fontSize = typeof getFontSizeForField === "function" ? getFontSizeForField(fieldName) : 9;
-  safeSetText(form, fieldName, value, fontSize);
-});
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
+        "Simple_Update_InsuredSex",
+        "Simple_Update_POSex",
+        "Simple_Update_NomineeSex"
+      ]);
 
-// --- Shared checkboxes for Insured / PO / Nominee ---
-if (typeof mapSharedCheckboxToPdf === "function") {
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Name", [
-    "Simple_Update_InsuredName",
-    "Simple_Update_POName",
-    "Simple_Update_NomineeName"
-  ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
+        "Simple_Update_InsuredCountry",
+        "Simple_Update_POCountry",
+        "Simple_Update_NomineeCountry"
+      ]);
 
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_DOB", [
-    "Simple_Update_InsuredDOB",
-    "Simple_Update_PODOB",
-    "Simple_Update_NomineeDOB"
-  ]);
+      mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
+        "Simple_Update_InsuredNationality",
+        "Simple_Update_PONationality",
+        "Simple_Update_NomineeNationality"
+      ]);
+    }
 
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_NIRC", [
-    "Simple_Update_InsuredNIRC",
-    "Simple_Update_PONIRC",
-    "Simple_Update_NomineeNIRC"
-  ]);
-
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Sex", [
-    "Simple_Update_InsuredSex",
-    "Simple_Update_POSex",
-    "Simple_Update_NomineeSex"
-  ]);
-
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Country", [
-    "Simple_Update_InsuredCountry",
-    "Simple_Update_POCountry",
-    "Simple_Update_NomineeCountry"
-  ]);
-
-  mapSharedCheckboxToPdf(pdfDoc, "Simple_Update_Nationality", [
-    "Simple_Update_InsuredNationality",
-    "Simple_Update_PONationality",
-    "Simple_Update_NomineeNationality"
-  ]);
-}
-
-// Embed Signatures (Note: 0-indexed page numbering)
-    // For Page 1 use 0, Page 2 use 1, Page 3 use 2
-    const targetPageIndex = 1; // Adjust this index to match the target page in your PDF template
+    const targetPageIndex = 1;
 
     await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "owner",   x: 50,  y: 300, factor: 0.50 });
     await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "assignee", x: 230, y: 300, factor: 0.50 });
     await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "witness", x: 410, y: 300, factor: 0.50 });
     await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "oldsig", x: 75, y: 650, factor: 0.50 });
     await embedSignatureToPdf(pdfDoc, targetPageIndex, { role: "newsig", x: 390, y: 650, factor: 0.50 });
-      
-   // 3. Save modified PDF bytes & create Blob URL
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
 
-    // 4. Construct output filename with policy number fallback
     const policyVal = getValue("Simple_BasicInfo_PolicyNo");
     let policyNum = "NEW";
 
@@ -1576,7 +1510,6 @@ if (typeof mapSharedCheckboxToPdf === "function") {
 
     const finalFileName = `${policyNum}_RFC_Simple.pdf`;
 
-    // 5. Execute action (View in new tab OR Force Download)
     if (action === 'view') {
       window.open(url, '_blank');
     } else {
@@ -1588,14 +1521,12 @@ if (typeof mapSharedCheckboxToPdf === "function") {
       link.remove();
     }
 
-    // 6. Clean up Blob URL memory leak after 5 seconds
     setTimeout(() => URL.revokeObjectURL(url), 5000);
 
   } catch (err) {
     console.error("Critical PDF Error:", err);
     alert("PDF generation failed: " + (err.message || err));
   } finally {
-    // Re-enable action buttons
     actionButtons.forEach(btn => btn.disabled = false);
   }
 }
@@ -1604,7 +1535,6 @@ if (typeof mapSharedCheckboxToPdf === "function") {
 function resetAllData() {
   if (!confirm("Are you sure you want to reset the form? All saved data will be cleared.")) return;
 
-  // 1. Reset inputs AND remove form field keys from localStorage
   document.querySelectorAll("input, select, textarea").forEach(el => {
     if (el.id) {
       localStorage.removeItem(el.id);
@@ -1617,11 +1547,9 @@ function resetAllData() {
     }
   });
 
-  // 2. Remove radio group selections stored under non-element keys
   const radioGroups = ["Paymentmodetype", "Paymentmethodtype", "Changesignature"];
   radioGroups.forEach(group => localStorage.removeItem(group));
 
-  // 3. FULL SIGNATURE RESET (Storage, UI, & SignaturePad Canvas)
   const formId = typeof FORM_ID !== "undefined" ? FORM_ID : "Simple";
 
   document.querySelectorAll("[data-sig-role]").forEach(block => {
@@ -1629,18 +1557,15 @@ function resetAllData() {
     const previewEl = block.querySelector("[data-sig-preview]");
     const formattedRole = role.charAt(0).toUpperCase() + role.slice(1);
 
-    // Remove primary, secondary, and fallback localStorage signature keys
     localStorage.removeItem(`sig_${formId}_${role}`);
     localStorage.removeItem(`sig_${role}`);
     localStorage.removeItem(role);
 
-    // Reset visual preview DOM
     if (previewEl) {
       previewEl.innerHTML = `<span>Tap to Sign (${formattedRole})</span>`;
     }
   });
 
-  // Clear active canvas drawing & target reference
   if (typeof signaturePad !== "undefined" && signaturePad) {
     signaturePad.clear();
   }
@@ -1648,22 +1573,17 @@ function resetAllData() {
     sigTarget = null;
   }
 
-  // 4. Update save status indicator
-  if (typeof showSaveStatus === "function") showSaveStatus();
+  showSaveStatus();
 }
-
-
 
 // ---------- SECTION TOGGLE LOGIC ----------
 document.addEventListener("DOMContentLoaded", () => {
-  // Utility: enable/disable all inputs in a section
   function setSectionEnabled(sectionEl, enabled) {
     if (!sectionEl) return;
     const inputs = sectionEl.querySelectorAll("input, select, textarea");
     inputs.forEach(el => el.disabled = !enabled);
   }
 
-  // Map each controlling checkbox → section
   const sectionMap = {
     "Updatedetails": "UpdateDetails",
     "Changepaymentmode": "ChangePaymentModeSection",
@@ -1672,24 +1592,21 @@ document.addEventListener("DOMContentLoaded", () => {
     "Others": "OtherSection"
   };
 
-  // Toggle logic
   Object.keys(sectionMap).forEach(cbId => {
     const cb = $(cbId);
     const sec = $(sectionMap[cbId]);
     if (!cb || !sec) return;
 
-    // Initial state
     sec.style.display = cb.checked ? "block" : "none";
     setSectionEnabled(sec, cb.checked);
 
-    // On change
     cb.addEventListener("change", () => {
       sec.style.display = cb.checked ? "block" : "none";
       setSectionEnabled(sec, cb.checked);
+      handleSectionToggle(cbId, sectionMap[cbId]);
     });
   });
 
-  // Nested role sections (inside UpdateDetails)
   const roleMap = {
     "Simple_Update_Insured": "UpdateInsuredDetails",
     "Simple_Update_PO": "UpdatePODetails",
@@ -1707,13 +1624,14 @@ document.addEventListener("DOMContentLoaded", () => {
     cb.addEventListener("change", () => {
       sec.style.display = cb.checked ? "block" : "none";
       setSectionEnabled(sec, cb.checked);
+      handleSectionToggle(cbId, roleMap[cbId]);
     });
   });
 });
 
-  // Show button when user scrolls down
 window.addEventListener("scroll", () => {
   const btn = document.getElementById("scrollTopBtn");
+  if (!btn) return;
   if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
     btn.classList.add("show");
   } else {
@@ -1721,7 +1639,6 @@ window.addEventListener("scroll", () => {
   }
 });
 
-// Smooth scroll to top
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -1732,37 +1649,27 @@ const indicatorSteps = document.querySelectorAll(".step");
 const nextBtn = document.getElementById("nextBtn");
 const prevBtn = document.getElementById("prevBtn");
 
-// 1. Load saved step on startup (fallback to 0 if invalid or empty)
 const savedStep = parseInt(localStorage.getItem("wizardCurrentStep"), 10);
 let currentStep = (!isNaN(savedStep) && savedStep >= 0 && savedStep < steps.length) ? savedStep : 0;
 
-// 2. Initialize Click Events for the Progress Tracker
 indicatorSteps.forEach((stepCircle, index) => {
   stepCircle.addEventListener("click", () => {
     navigateTo(index);
   });
 });
 
-// 3. Updated Navigation Function
 function navigateTo(index) {
-  // Clear 'active' from ALL steps & indicators to override hardcoded HTML
   steps.forEach(step => step.classList.remove("active"));
   indicatorSteps.forEach(ind => ind.classList.remove("active"));
 
-  // Update Index
   currentStep = index;
-
-  // Persist current step to localStorage
   localStorage.setItem("wizardCurrentStep", currentStep);
 
-  // Apply active class to current step
   steps[currentStep].classList.add("active");
   indicatorSteps[currentStep].classList.add("active");
 
-  // Handle "Previous" button visibility
   if (prevBtn) prevBtn.style.visibility = (currentStep === 0) ? "hidden" : "visible";
 
-  // Handle "Next" button: Hide it completely on the final step
   if (nextBtn) {
     if (currentStep === steps.length - 1) {
       nextBtn.style.display = "none";
@@ -1772,45 +1679,34 @@ function navigateTo(index) {
     }
   }
 
-  // Smooth scroll to top of the card
   const mainContent = document.querySelector('main');
   if (mainContent) mainContent.scrollIntoView({ behavior: 'smooth' });
 }
 
-// 4. Updated Next/Back logic
 function changeStep(n) {
   let newStep = currentStep + n;
-  
-  // Only navigate if the step actually exists
   if (newStep >= 0 && newStep < steps.length) {
     navigateTo(newStep);
   }
 }
 
-// 5. Force UI to match saved step as soon as DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   navigateTo(currentStep);
 });
 
-// iOS-Style Back Navigation Interceptor
 const backToMainLink = document.getElementById("backToMainLink");
 if (backToMainLink) {
     backToMainLink.addEventListener("click", function(e) {
-        e.preventDefault(); // Always intercept to control the navigation flow cleanly
-        
-        // If the browser has history of a previous page within your system, pop back to it natively
+        e.preventDefault();
         if (document.referrer && document.referrer.includes(window.location.hostname)) {
             window.history.back();
         } else {
-            // Secure Fallback: If they opened the form directly in a new tab
             window.location.href = "dashboard.html";
         }
     });
 }
-
 </script>    
     
-     <!-- Interactive Script for Mobile Navigation Layout Toggle -->
     <script>
         function toggleMobileMenu() {
             document.getElementById('navMenu').classList.toggle('show');
