@@ -950,32 +950,58 @@ window.addEventListener("DOMContentLoaded", () => {
 });
     
 
-// ----------------- Data-Driven Hierarchy Map -----------------
+// =============================================================================
+// 1. DATA-DRIVEN HIERARCHY MAP
+// Maps child container/checkbox IDs directly to their parent controller ID.
+// =============================================================================
 const SECTION_PARENT_MAP = {
-  // Subsection Container / Role IDs -> Main Section Controller ID
+  // Subsection Containers -> Main Section Controller Checkbox ID
   UpdateInsuredDetails: "Updatedetails",
   UpdatePODetails: "Updatedetails",
   UpdateNomineeDetails: "Updatedetails",
 
+  // Subsection Role Checkboxes -> Main Section Controller Checkbox ID
   Simple_Update_Insured: "Updatedetails",
   Simple_Update_PO: "Updatedetails",
   Simple_Update_Nominee: "Updatedetails",
 
-  // Additional section mappings
+  // Other Top-Level Sections
   ChangePaymentModeSection: "Changepaymentmode",
   ChangePaymentMethodSection: "Changepaymentmethod",
   ChangeSignatureSection: "Changesignature",
   OtherSection: "Others"
 };
 
+// Main controller checkbox IDs list for state restoration and event binding
+const MAIN_CONTROLLERS = [
+  "Updatedetails",
+  "Changepaymentmode",
+  "Changepaymentmethod",
+  "Changesignature",
+  "Others"
+];
+
+// All checkbox IDs that need state persistence in localStorage
+const PERSISTED_CHECKBOXES = [
+  ...MAIN_CONTROLLERS,
+  "Simple_Update_Insured",
+  "Simple_Update_PO",
+  "Simple_Update_Nominee"
+];
+
+
+// =============================================================================
+// 2. SECTION INCLUSION & PDF HELPERS
+// =============================================================================
+
 /**
- * Returns true if a DOM input (by id) should be exported to the PDF.
- * Uses SECTION_PARENT_MAP for direct ID lookups, ignoring DOM hierarchy/wizard steps.
+ * Returns true if a DOM input (by id) should be included in UI/PDF export.
+ * Uses SECTION_PARENT_MAP for direct ID lookups, bypassing DOM hierarchy & wizard steps.
  */
 function shouldIncludeFieldByUI(fieldId) {
   const el = document.getElementById(fieldId);
 
-  // 1. Determine parent controller ID (checks map directly or falls back to data-parent attribute)
+  // 1. Determine parent controller ID (checks map directly, or falls back to data-parent attribute)
   const parentControllerId = SECTION_PARENT_MAP[fieldId] || el?.dataset?.parent;
 
   // 2. If a parent controller exists, verify if it is checked
@@ -1002,11 +1028,10 @@ function shouldIncludeFieldByUI(fieldId) {
 }
 
 /**
- * Helper to map multiple role checkboxes → one shared PDF checkbox.
+ * Helper to map multiple role checkboxes -> one shared PDF checkbox.
  * Leverages shouldIncludeFieldByUI for data-driven validation.
  */
 function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  // Check if ANY of the htmlIds pass the data-driven UI inclusion test
   const anyChecked = htmlIds.some(id => {
     const el = document.getElementById(id);
     return el && el.checked && shouldIncludeFieldByUI(id);
@@ -1023,6 +1048,188 @@ function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
     console.warn(`PDF checkbox ${pdfFieldName} not found`);
   }
 }
+
+/**
+ * Clears DOM values and LocalStorage when a section controller is unchecked
+ */
+function handleSectionToggle(controllerId, sectionContainerId) {
+  const controller = document.getElementById(controllerId);
+  const container = document.getElementById(sectionContainerId);
+  if (!controller || !container) return;
+
+  if (!controller.checked) {
+    const inputs = container.querySelectorAll("input, select, textarea");
+    inputs.forEach(input => {
+      const wasChecked = input.checked;
+
+      if (input.type === "checkbox" || input.type === "radio") {
+        input.checked = false;
+      } else {
+        input.value = "";
+      }
+
+      if (input.id) {
+        localStorage.removeItem(input.id);
+      }
+
+      // Dispatch event if state changed so reactive listeners update UI
+      if (wasChecked) {
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+}
+
+
+// =============================================================================
+// 3. UI SYNCING & LOCALSTORAGE RESTORATION LOGIC
+// =============================================================================
+
+/**
+ * Restores saved checkbox states from LocalStorage on startup
+ */
+function restoreCheckboxStates() {
+  PERSISTED_CHECKBOXES.forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) {
+      const savedVal = localStorage.getItem(id);
+      if (savedVal !== null) {
+        cb.checked = (savedVal === "true");
+      }
+    }
+  });
+}
+
+/**
+ * Evaluates SECTION_PARENT_MAP and toggles visibility of subsections in DOM
+ */
+function syncAllSectionVisibilities() {
+  Object.entries(SECTION_PARENT_MAP).forEach(([childId, parentControllerId]) => {
+    const parentCb = document.getElementById(parentControllerId);
+    const childEl = document.getElementById(childId);
+
+    if (parentCb && childEl) {
+      if (parentCb.checked) {
+        childEl.style.display = ""; // Restores default CSS layout (block/flex/grid)
+        childEl.classList.remove("hidden");
+      } else {
+        childEl.style.display = "none"; // Hides child subsection
+        childEl.classList.add("hidden");
+      }
+    }
+  });
+}
+
+
+// =============================================================================
+// 4. WIZARD TRACKER LOGIC
+// =============================================================================
+let steps, indicatorSteps, nextBtn, prevBtn, currentStep;
+
+function initWizard() {
+  steps = document.querySelectorAll(".wizard-step");
+  indicatorSteps = document.querySelectorAll(".step");
+  nextBtn = document.getElementById("nextBtn");
+  prevBtn = document.getElementById("prevBtn");
+
+  // Load saved step on startup (fallback to 0 if invalid or empty)
+  const savedStep = parseInt(localStorage.getItem("wizardCurrentStep"), 10);
+  currentStep = (!isNaN(savedStep) && savedStep >= 0 && savedStep < steps.length) ? savedStep : 0;
+
+  // Initialize Click Events for Progress Indicators
+  indicatorSteps.forEach((stepCircle, index) => {
+    stepCircle.addEventListener("click", () => {
+      navigateTo(index);
+    });
+  });
+
+  // Load initial step
+  navigateTo(currentStep);
+}
+
+function navigateTo(index) {
+  if (!steps || steps.length === 0) return;
+
+  // Clear 'active' from ALL steps & indicators
+  steps.forEach(step => step.classList.remove("active"));
+  indicatorSteps.forEach(ind => ind.classList.remove("active"));
+
+  // Update Index
+  currentStep = index;
+  localStorage.setItem("wizardCurrentStep", currentStep);
+
+  // Apply active class to current step
+  if (steps[currentStep]) steps[currentStep].classList.add("active");
+  if (indicatorSteps[currentStep]) indicatorSteps[currentStep].classList.add("active");
+
+  // Handle "Previous" button visibility
+  if (prevBtn) prevBtn.style.visibility = (currentStep === 0) ? "hidden" : "visible";
+
+  // Handle "Next" button visibility
+  if (nextBtn) {
+    if (currentStep === steps.length - 1) {
+      nextBtn.style.display = "none";
+    } else {
+      nextBtn.style.display = "block";
+      nextBtn.innerText = "Next Step";
+    }
+  }
+
+  // Smooth scroll to top of main content
+  const mainContent = document.querySelector('main');
+  if (mainContent) mainContent.scrollIntoView({ behavior: 'smooth' });
+}
+
+function changeStep(n) {
+  let newStep = currentStep + n;
+  if (newStep >= 0 && newStep < steps.length) {
+    navigateTo(newStep);
+  }
+}
+
+
+// =============================================================================
+// 5. INITIALIZATION ON DOM CONTENT LOADED
+// =============================================================================
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Restore checkbox states from LocalStorage
+  restoreCheckboxStates();
+
+  // 2. Initialize Wizard Navigation
+  initWizard();
+
+  // 3. Sync subsection visibilities immediately for current restored states
+  syncAllSectionVisibilities();
+
+  // 4. Attach Event Listeners to Main Controller Checkboxes
+  MAIN_CONTROLLERS.forEach(controllerId => {
+    const cb = document.getElementById(controllerId);
+    if (cb) {
+      cb.addEventListener("change", (e) => {
+        // Persist controller state
+        localStorage.setItem(controllerId, e.target.checked);
+
+        // Update UI visibilities immediately
+        syncAllSectionVisibilities();
+
+        // If unticked, clear internal form inputs for that section
+        if (!e.target.checked) {
+          handleSectionToggle(controllerId, controllerId + "Section");
+        }
+      });
+    }
+  });
+
+  // 5. Attach change listeners to sub-checkboxes to persist their states
+  ["Simple_Update_Insured", "Simple_Update_PO", "Simple_Update_Nominee"].forEach(subId => {
+    const subCb = document.getElementById(subId);
+    if (subCb) {
+      subCb.addEventListener("change", (e) => {
+        localStorage.setItem(subId, e.target.checked);
+      });
+    }
+  });
+});
 
 /* ---------- Date Set Today Button ---------- */  
 function setSignedDateToday() {
