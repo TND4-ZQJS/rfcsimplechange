@@ -950,71 +950,75 @@ window.addEventListener("DOMContentLoaded", () => {
 });
     
 
-// ----------------- Section inclusion helper -----------------
-const CONTROLLER_BY_SECTION = {
-  UpdateDetails: "Updatedetails",
+// ----------------- Data-Driven Hierarchy Map -----------------
+const SECTION_PARENT_MAP = {
+  // Subsection Container / Role IDs -> Main Section Controller ID
+  UpdateInsuredDetails: "Updatedetails",
+  UpdatePODetails: "Updatedetails",
+  UpdateNomineeDetails: "Updatedetails",
+
+  Simple_Update_Insured: "Updatedetails",
+  Simple_Update_PO: "Updatedetails",
+  Simple_Update_Nominee: "Updatedetails",
+
+  // Additional section mappings
   ChangePaymentModeSection: "Changepaymentmode",
   ChangePaymentMethodSection: "Changepaymentmethod",
   ChangeSignatureSection: "Changesignature",
-  OtherSection: "Others",
-  UpdateInsuredDetails: "Simple_Update_Insured",
-  UpdatePODetails: "Simple_Update_PO",
-  UpdateNomineeDetails: "Simple_Update_Nominee"
+  OtherSection: "Others"
 };
 
-// Returns true if a DOM input (by id) should be exported to the PDF.
-// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
-// that is currently UNchecked, returns false (skip).
+/**
+ * Returns true if a DOM input (by id) should be exported to the PDF.
+ * Uses SECTION_PARENT_MAP for direct ID lookups, ignoring DOM hierarchy/wizard steps.
+ */
 function shouldIncludeFieldByUI(fieldId) {
   const el = document.getElementById(fieldId);
-  if (!el) return true; // if element isn't present in DOM, include by default
-  let parent = el;
-  while (parent && parent !== document.body) {
-    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
-      const controllerId = CONTROLLER_BY_SECTION[parent.id];
-      const cb = document.getElementById(controllerId);
-      if (cb && !cb.checked) return false; // section unticked → skip
+
+  // 1. Determine parent controller ID (checks map directly or falls back to data-parent attribute)
+  const parentControllerId = SECTION_PARENT_MAP[fieldId] || el?.dataset?.parent;
+
+  // 2. If a parent controller exists, verify if it is checked
+  if (parentControllerId) {
+    const parentCb = document.getElementById(parentControllerId);
+
+    // If parent controller exists in DOM and is UNCHECKED → skip field
+    if (parentCb && !parentCb.checked) {
+      return false;
     }
-    parent = parent.parentElement;
+
+    // Recursively check if the parent controller itself has a master parent
+    if (!shouldIncludeFieldByUI(parentControllerId)) {
+      return false;
+    }
   }
+
+  // 3. If the element itself is a checkbox and is unchecked, skip it
+  if (el && el.type === "checkbox" && !el.checked) {
+    return false;
+  }
+
   return true;
 }
 
-// Helper to map multiple role checkboxes → one shared PDF checkbox
+/**
+ * Helper to map multiple role checkboxes → one shared PDF checkbox.
+ * Leverages shouldIncludeFieldByUI for data-driven validation.
+ */
 function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  // **NEW LOGIC: Check if the main 'Update Customer Details' section is enabled**
-  const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
-  if (!updateDetailsEnabled) {
-      try {
-          // If the main section is unticked, force the shared PDF checkbox to uncheck.
-          pdfDoc.getForm().getCheckBox(pdfFieldName).uncheck();
-      } catch (e) {}
-      return; // Stop here, don't check child elements
-  }
+  // Check if ANY of the htmlIds pass the data-driven UI inclusion test
+  const anyChecked = htmlIds.some(id => {
+    const el = document.getElementById(id);
+    return el && el.checked && shouldIncludeFieldByUI(id);
+  });
 
-  // OLD LOGIC: Only proceed if the main parent section is ticked
-// NEW LOGIC: Only proceed if the main parent section is ticked
-const anyChecked = htmlIds.some(id => {
-  const el = document.getElementById(id);
-  
-  // Determine the controlling Role checkbox ID based on the element ID
-  let roleControllerId;
-  if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
-  else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
-  else if (id.includes("Nominee")) roleControllerId = "Simple_Update_Nominee";
-  
-  const roleController = document.getElementById(roleControllerId);
-
-  // A shared field is considered checked ONLY IF:
-  // 1. The individual detail checkbox is checked (el.checked)
-  // 2. The corresponding Role checkbox is checked (roleController?.checked)
-  return el && el.checked && roleController && roleController.checked;
-});
-  
   try {
     const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
-    if (anyChecked) field.check();
-    else field.uncheck();
+    if (anyChecked) {
+      field.check();
+    } else {
+      field.uncheck();
+    }
   } catch (e) {
     console.warn(`PDF checkbox ${pdfFieldName} not found`);
   }
