@@ -942,17 +942,26 @@ function handleSectionToggle(controllerId, sectionContainerId) {
   if (!controller.checked) {
     const inputs = container.querySelectorAll("input, select, textarea");
     inputs.forEach(input => {
+      const wasChecked = input.checked;
+
       if (input.type === "checkbox" || input.type === "radio") {
         input.checked = false;
       } else {
         input.value = "";
       }
+
       if (input.id) {
         localStorage.removeItem(input.id);
+      }
+
+      // Dispatch event if state changed so UI listeners update subsection visibility
+      if (wasChecked) {
+        input.dispatchEvent(new Event("change", { bubbles: true }));
       }
     });
   }
 }
+
 
 function safeSetText(form, name, text, fontSize = 9){
   try { 
