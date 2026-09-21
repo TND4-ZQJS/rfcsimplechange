@@ -894,6 +894,36 @@ const FORM_ID = "Simple";
 /* ---------- DOM Helpers ---------- */
 const $ = (id) => document.getElementById(id);
 
+// ----------------- Section inclusion helper -----------------
+const CONTROLLER_BY_SECTION = {
+  UpdateDetails: "Updatedetails",
+  ChangePaymentModeSection: "Changepaymentmode",
+  ChangePaymentMethodSection: "Changepaymentmethod",
+  ChangeSignatureSection: "Changesignature",
+  OtherSection: "Others",
+  UpdateInsuredDetails: "Simple_Update_Insured",
+  UpdatePODetails: "Simple_Update_PO",
+  UpdateNomineeDetails: "Simple_Update_Nominee"
+};
+
+// Returns true if a DOM input (by id) should be exported to the PDF.
+// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
+// that is currently UNchecked, returns false (skip).
+function shouldIncludeFieldByUI(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return true; // if element isn't present in DOM, include by default
+  let parent = el;
+  while (parent && parent !== document.body) {
+    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
+      const controllerId = CONTROLLER_BY_SECTION[parent.id];
+      const cb = document.getElementById(controllerId);
+      if (cb && !cb.checked) return false; // section unticked → skip
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+}
+
 function safeSetText(form, name, text){
   try{ form.getTextField(name).setText(String(text || "")); } catch(e){ }
 }
@@ -949,104 +979,6 @@ window.addEventListener("DOMContentLoaded", () => {
   loadFromLocalStorage();
 });
     
-
-// ----------------- Section inclusion helper -----------------
-const CONTROLLER_BY_SECTION = {
-  UpdateDetails: "Updatedetails",
-  ChangePaymentModeSection: "Changepaymentmode",
-  ChangePaymentMethodSection: "Changepaymentmethod",
-  ChangeSignatureSection: "Changesignature",
-  OtherSection: "Others",
-  UpdateInsuredDetails: "Simple_Update_Insured",
-  UpdatePODetails: "Simple_Update_PO",
-  UpdateNomineeDetails: "Simple_Update_Nominee"
-};
-
-/**
- * Clears/erases all input fields inside a given container element.
- */
-function clearSectionInputs(containerEl) {
-  if (!containerEl) return;
-
-  // Clear text inputs, textareas, selects, and checkboxes/radios
-  const inputs = containerEl.querySelectorAll("input, select, textarea");
-  inputs.forEach(input => {
-    const type = input.type ? input.type.toLowerCase() : "";
-
-    if (type === "checkbox" || type === "radio") {
-      if (input.checked) {
-        input.checked = false;
-        // Trigger a change event in case other listeners depend on sub-checkboxes
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-    } else if (type === "select-one" || type === "select-multiple") {
-      input.selectedIndex = -1;
-      input.dispatchEvent(new Event("change", { bubbles: true }));
-    } else {
-      input.value = "";
-      input.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-  });
-}
-
-/**
- * Syncs the visual state of a section and manages field clearing.
- */
-function syncSectionVisibility(sectionId) {
-  const controllerId = CONTROLLER_BY_SECTION[sectionId];
-  const sectionEl = document.getElementById(sectionId);
-  const controllerCb = document.getElementById(controllerId);
-
-  if (!sectionEl || !controllerCb) return;
-
-  if (controllerCb.checked) {
-    // Show section (Remove hidden attribute / restore display)
-    sectionEl.style.display = ""; 
-    sectionEl.classList.remove("hidden", "d-none"); // Removes common framework hidden classes
-  } else {
-    // 1. Hide section
-    sectionEl.style.display = "none";
-
-    // 2. Erase/Clear all field values inside this section when unchecked
-    clearSectionInputs(sectionEl);
-  }
-}
-
-/**
- * Binds event listeners and synchronizes all section states.
- */
-function initSectionVisibility() {
-  Object.keys(CONTROLLER_BY_SECTION).forEach(sectionId => {
-    const controllerId = CONTROLLER_BY_SECTION[sectionId];
-    const controllerCb = document.getElementById(controllerId);
-
-    if (controllerCb) {
-      // Sync initial state on load
-      syncSectionVisibility(sectionId);
-
-      // Attach change listener if not already bound
-      if (!controllerCb.dataset.bound) {
-        controllerCb.addEventListener("change", () => {
-          syncSectionVisibility(sectionId);
-        });
-        controllerCb.dataset.bound = "true";
-      }
-    }
-  });
-}
-
-// ---------------- Initialization Listeners ----------------
-
-// Run as soon as DOM structure is ready
-document.addEventListener("DOMContentLoaded", initSectionVisibility);
-
-// Run again on full page load (handles images, CSS, and browser autofill restoration)
-window.addEventListener("load", initSectionVisibility);
-
-// Handles back/forward cache restoration in browsers
-window.addEventListener("pageshow", initSectionVisibility);
-
-
 
 /* ---------- Date Set Today Button ---------- */  
 function setSignedDateToday() {
