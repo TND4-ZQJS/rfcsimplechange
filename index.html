@@ -895,6 +895,7 @@ const FORM_ID = "Simple";
 const $ = (id) => document.getElementById(id);
 
 // ----------------- Section inclusion helper -----------------
+// ----------------- Section inclusion helper -----------------
 const CONTROLLER_BY_SECTION = {
   UpdateDetails: "Updatedetails",
   ChangePaymentModeSection: "Changepaymentmode",
@@ -906,12 +907,15 @@ const CONTROLLER_BY_SECTION = {
   UpdateNomineeDetails: "Simple_Update_Nominee"
 };
 
-// Returns true if a DOM input (by id) should be exported to the PDF.
-// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
-// that is currently UNchecked, returns false (skip).
+/**
+ * Returns true if a DOM input (by id) should be exported to the PDF.
+ * Walks up the DOM tree: if any ancestor section is controlled by a checkbox
+ * that is currently UNchecked, returns false (skip).
+ */
 function shouldIncludeFieldByUI(fieldId) {
   const el = document.getElementById(fieldId);
   if (!el) return true; // if element isn't present in DOM, include by default
+
   let parent = el;
   while (parent && parent !== document.body) {
     if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
@@ -923,6 +927,53 @@ function shouldIncludeFieldByUI(fieldId) {
   }
   return true;
 }
+
+/**
+ * Helper to map multiple role checkboxes → one shared PDF checkbox.
+ * Uses shouldIncludeFieldByUI to ensure nested parent/child controller hierarchy is respected.
+ */
+function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
+  // A shared checkbox is checked if AT LEAST ONE element is:
+  // 1. Physically checked in the DOM
+  // 2. Belongs to a visible/enabled parent section hierarchy
+  const anyChecked = htmlIds.some(id => {
+    const el = document.getElementById(id);
+    return el && el.checked && shouldIncludeFieldByUI(id);
+  });
+
+  try {
+    const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
+    if (anyChecked) {
+      field.check();
+    } else {
+      field.uncheck();
+    }
+  } catch (e) {
+    console.warn(`PDF checkbox ${pdfFieldName} not found`);
+  }
+}
+
+/**
+ * Clears DOM values when a section controller is unchecked
+ */
+function handleSectionToggle(controllerId, sectionContainerId) {
+  const controller = document.getElementById(controllerId);
+  const container = document.getElementById(sectionContainerId);
+  if (!controller || !container) return;
+
+  if (!controller.checked) {
+    // Uncheck and clear all inputs within the container
+    const inputs = container.querySelectorAll("input, select, textarea");
+    inputs.forEach(input => {
+      if (input.type === "checkbox" || input.type === "radio") {
+        input.checked = false;
+      } else {
+        input.value = "";
+      }
+    });
+  }
+}
+
 
 function safeSetText(form, name, text){
   try{ form.getTextField(name).setText(String(text || "")); } catch(e){ }
