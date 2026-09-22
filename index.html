@@ -490,10 +490,12 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
   </div><!-- (End) STEP 2: Person -->
 
 <div class="wizard-step"><!-- STEP 3: Options -->
-  <section class="section">
+  <!-- MAIN SECTION: UserOption -->
+  <section class="section" id="UserOption">
     <label>
-    <span style="font-weight:500; color:var(--accent);">Choose one or more request <small class="muted">(only request that is "checked in the box" will appear)</small></span></label>
-    <div id="UserOption" class="grid-2">
+      <span style="font-weight:500; color:var(--accent);">Choose one or more request <small class="muted">(only request that is "checked in the box" will appear)</small></span>
+    </label>
+    <div class="grid-2">
       <div>
         <label class="info-label"><input id="Updatedetails" class="persist" type="checkbox">A. Update Customer Details</label>
       </div>
@@ -510,193 +512,215 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
         <label class="info-label"><input id="Others" class="persist" type="checkbox">E. Others</label>
       </div>
     </div>
-</section>
+  </section>
 
-
-  <!-- SECTION: Update Customer Details -->
-  <section class="section" id="UpdateDetails">
+  <!-- SUB-SECTION: Update Customer Details -->
+  <section class="section" id="UpdateDetailsSection" style="display: none;">
     <h2>A. Update Customer Details</h2>
     <small class="muted">Documentary proof is required, i.e. Birth Certificate/Identity Card/Passport.</small>
 
     <div class="row">
-    <label class="info-label">Customer's Role <small class="muted">(choose one or more to update)</small></label>
+      <label class="info-label">Customer's Role <small class="muted">(choose one or more to update)</small></label>
     </div>
-        <div class="row">
+    <div class="row">
       <label class="inline"><input class="persist" id="Simple_Update_Insured" type="checkbox">Insured</label>
       <label class="inline"><input class="persist" id="Simple_Update_PO" type="checkbox">Policy Owner</label>
       <label class="inline"><input class="persist" id="Simple_Update_Nominee" type="checkbox">Nominee/Assignee/Trustee</label>
-        </div>
-     
+    </div>
 
-       <section class="section" id="UpdateInsuredDetails">
-    <h3>Insured - Update Details</h3>
-        <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredName" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredName_Text" type="text" placeholder="Enter insured's name">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredDOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredDOB_Text" type="text" placeholder="Enter insured's DOB">
-        </div>
-          <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredNIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNIRC_Text" type="text" placeholder="Enter insured's IC/BC/Passport">
-        </div>
-        <div class="row">
-          <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_InsuredSex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredSex_Text" type="text" placeholder="Enter insured's sex">
-        </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_InsuredCountry" type="checkbox">Country of Birth</label>
-         <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredCountry_Text" type="text" placeholder="Enter insured's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_InsuredNationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_InsuredNationality_Text" type="text" placeholder="Enter insured's nationality">
-         </div>
+    <!-- INNER SUB-SECTION: Insured Details -->
+    <section class="section" id="UpdateInsuredDetails" style="display: none;">
+      <h3>Insured - Update Details</h3>
+      <div class="row"> 
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredName" type="checkbox">Name</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredName_Text" type="text" placeholder="Enter insured's name">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredDOB" type="checkbox">Date of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredDOB_Text" type="text" placeholder="Enter insured's DOB">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredNIRC" type="checkbox">IC/BC/Passport No.</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredNIRC_Text" type="text" placeholder="Enter insured's IC/BC/Passport">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredSex" type="checkbox">Sex</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredSex_Text" type="text" placeholder="Enter insured's sex">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredCountry" type="checkbox">Country of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredCountry_Text" type="text" placeholder="Enter insured's Country of Birth">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_InsuredNationality" type="checkbox">Nationality</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_InsuredNationality_Text" type="text" placeholder="Enter insured's nationality">
+      </div>
     </section>
 
-        <section class="section" id="UpdatePODetails">
-    <h3>Policy Owner - Update Details</h3>
-        <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_POName" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POName_Text" type="text" placeholder="Enter policy owner's name">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_PODOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PODOB_Text" type="text" placeholder="Enter policy owner's DOB">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_PONIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONIRC_Text" type="text" placeholder="Enter policy owner's IC/BC/Passport">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_POSex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POSex_Text" type="text" placeholder="Enter policy owner's sex">
-        </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_POCountry" type="checkbox">Country of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_POCountry_Text" type="text" placeholder="Enter policy owner's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_PONationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_PONationality_Text" type="text" placeholder="Enter policy owner's nationality">
-         </div>
+    <!-- INNER SUB-SECTION: Policy Owner Details -->
+    <section class="section" id="UpdatePODetails" style="display: none;">
+      <h3>Policy Owner - Update Details</h3>
+      <div class="row"> 
+        <label class="inline"><input class="persist" id="Simple_Update_POName" type="checkbox">Name</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_POName_Text" type="text" placeholder="Enter policy owner's name">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_PODOB" type="checkbox">Date of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_PODOB_Text" type="text" placeholder="Enter policy owner's DOB">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_PONIRC" type="checkbox">IC/BC/Passport No.</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_PONIRC_Text" type="text" placeholder="Enter policy owner's IC/BC/Passport">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_POSex" type="checkbox">Sex</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_POSex_Text" type="text" placeholder="Enter policy owner's sex">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_POCountry" type="checkbox">Country of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_POCountry_Text" type="text" placeholder="Enter policy owner's Country of Birth">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_PONationality" type="checkbox">Nationality</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_PONationality_Text" type="text" placeholder="Enter policy owner's nationality">
+      </div>
     </section>
 
-        <section class="section" id="UpdateNomineeDetails">
-    <h3>Nominee/Trustee/Assignee - Update Details</h3>
-        <div class="row"> 
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeName" type="checkbox">Name</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeName_Text" type="text" placeholder="Enter nominee/trustee/assignee's name">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeDOB" type="checkbox">Date of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeDOB_Text" type="text" placeholder="Enter nominee/trustee/assignee's DOB">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeNIRC" type="checkbox">IC/BC/Passport No.</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNIRC_Text" type="text" placeholder="Enter nominee/trustee/assignee's IC/BC/Passport">
-        </div>
-        <div class="row">
-      <label class="inline"><input class="persist" id="Simple_Update_NomineeSex" type="checkbox">Sex</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeSex_Text" type="text" placeholder="Enter nominee/trustee/assignee's sex">
-        </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_NomineeCountry" type="checkbox">Country of Birth</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeCountry_Text" type="text" placeholder="Enter nominee/trustee/assignee's Country of Birth">
-         </div>
-         <div class="row">
-         <label class="inline"><input class="persist" id="Simple_Update_NomineeNationality" type="checkbox">Nationality</label>
-          <small class="muted">(tick checkbox before key in)</small><input class="persist" id="Simple_Update_NomineeNationality_Text" type="text" placeholder="Enter nominee/trustee/assignee's nationality">
-         </div>
+    <!-- INNER SUB-SECTION: Nominee Details -->
+    <section class="section" id="UpdateNomineeDetails" style="display: none;">
+      <h3>Nominee/Trustee/Assignee - Update Details</h3>
+      <div class="row"> 
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeName" type="checkbox">Name</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeName_Text" type="text" placeholder="Enter nominee/trustee/assignee's name">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeDOB" type="checkbox">Date of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeDOB_Text" type="text" placeholder="Enter nominee/trustee/assignee's DOB">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeNIRC" type="checkbox">IC/BC/Passport No.</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeNIRC_Text" type="text" placeholder="Enter nominee/trustee/assignee's IC/BC/Passport">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeSex" type="checkbox">Sex</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeSex_Text" type="text" placeholder="Enter nominee/trustee/assignee's sex">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeCountry" type="checkbox">Country of Birth</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeCountry_Text" type="text" placeholder="Enter nominee/trustee/assignee's Country of Birth">
+      </div>
+      <div class="row">
+        <label class="inline"><input class="persist" id="Simple_Update_NomineeNationality" type="checkbox">Nationality</label>
+        <small class="muted">(tick checkbox before key in)</small>
+        <input class="persist" id="Simple_Update_NomineeNationality_Text" type="text" placeholder="Enter nominee/trustee/assignee's nationality">
+      </div>
     </section>
-
   </section>
 
-    <!-- SECTION: Change of Payment Mode -->
-  <section class="section" id="ChangePaymentModeSection">
+  <!-- SUB-SECTION: Change of Payment Mode -->
+  <section class="section" id="ChangePaymentModeSection" style="display: none;">
     <h2>B. Change of Payment Mode</h2>
-    <div id="UserOption" class="grid-2">
+    <div class="grid-2">
       <div>
-        <label class="inline"><input id="Simple_Payment_Annual" class="persist"  name="Paymentmodetype" type="radio">Annual</label>
+        <label class="inline"><input id="Simple_Payment_Annual" value="Simple_Payment_Annual" class="persist" name="Paymentmodetype" type="radio">Annual</label>
       </div>
       <div>
-        <label class="inline"><input id="Simple_Payment_SemiAnnual" class="persist"  name="Paymentmodetype" type="radio">Semi-Annual</label>
+        <label class="inline"><input id="Simple_Payment_SemiAnnual" value="Simple_Payment_SemiAnnual" class="persist" name="Paymentmodetype" type="radio">Semi-Annual</label>
       </div>
-           <div>
-        <label class="inline"><input id="Simple_Payment_Quarterly" class="persist"  name="Paymentmodetype" type="radio">Quarterly</label>
+      <div>
+        <label class="inline"><input id="Simple_Payment_Quarterly" value="Simple_Payment_Quarterly" class="persist" name="Paymentmodetype" type="radio">Quarterly</label>
       </div>
-           <div>
-        <label class="inline"><input id="Simple_Payment_Monthly" class="persist"  name="Paymentmodetype" type="radio">Monthly</label>
+      <div>
+        <label class="inline"><input id="Simple_Payment_Monthly" value="Simple_Payment_Monthly" class="persist" name="Paymentmodetype" type="radio">Monthly</label>
       </div>
     </div>
   </section>
 
-    <!-- SECTION: Change of Payment Type -->
-  <section class="section" id="ChangePaymentMethodSection">
+  <!-- SUB-SECTION: Change of Payment Method -->
+  <section class="section" id="ChangePaymentMethodSection" style="display: none;">
     <h2>C. Change of Payment Method</h2>
-    <div id="UserOption" class="grid-2">
+    <div class="grid-2">
       <div>
-        <label class="inline"><input id="Simple_Payment_Internet" class="persist"  name="Paymentmethodtype" type="radio">Internet Banking</label>
+        <label class="inline"><input id="Simple_Payment_Internet" value="Simple_Payment_Internet" class="persist" name="Paymentmethodtype" type="radio">Internet Banking</label>
       </div>
       <div>
-        <label class="inline"><input id="Simple_Payment_FPX" class="persist" name="Paymentmethodtype" type="radio">Direct Debit (FPX)</label>
+        <label class="inline"><input id="Simple_Payment_FPX" value="Simple_Payment_FPX" class="persist" name="Paymentmethodtype" type="radio">Direct Debit (FPX)</label>
       </div>
     </div>
   </section>
-  
-  <!-- SECTION: Change Signature -->
-  <section class="section" id="ChangeSignatureSection">
+
+  <!-- SUB-SECTION: Change Signature -->
+  <section class="section" id="ChangeSignatureSection" style="display: none;">
     <h2>D. Change of Signature</h2>
-    <div id="UserOption" class="grid-2">
+    <div class="grid-2">
       <div>
-        <label class="inline"><input id="Simple_ChangeSig_Insured" class="persist"  name="Changesignature" type="radio">Insured</label>
+        <label class="inline"><input id="Simple_ChangeSig_Insured" value="Simple_ChangeSig_Insured" class="persist" name="Changesignature" type="radio">Insured</label>
       </div>
       <div>
-        <label class="inline"><input id="Simple_ChangeSig_PO" class="persist"  name="Changesignature" type="radio">Policy Owner</label>
+        <label class="inline"><input id="Simple_ChangeSig_PO" value="Simple_ChangeSig_PO" class="persist" name="Changesignature" type="radio">Policy Owner</label>
       </div>
-           <div>
-        <label class="inline"><input id="Simple_ChangeSig_Assignee" class="persist"  name="Changesignature" type="radio">Assignee</label>
+      <div>
+        <label class="inline"><input id="Simple_ChangeSig_Assignee" value="Simple_ChangeSig_Assignee" class="persist" name="Changesignature" type="radio">Assignee</label>
       </div>
-           <div>
-        <label class="inline"><input id="Simple_ChangeSig_Trustee" class="persist"  name="Changesignature" type="radio">Trustee</label>
+      <div>
+        <label class="inline"><input id="Simple_ChangeSig_Trustee" value="Simple_ChangeSig_Trustee" class="persist" name="Changesignature" type="radio">Trustee</label>
       </div>
     </div>
 
-      <div class="sig-preview" id="preview_simple_oldsig" onclick="openSig('simple_oldsig')">
-      <span>Tap to Sign (Old Signature)</span>
-    </div>
-    <div class="row">
-      <button id="clearPreview_Simple_Oldsig" class="secondary" type="button">Clear Signature</button>
+    <div class="section" data-sig-role="oldsig" data-sig-title="Sign: Old Signature">
+      <div class="sig-preview" data-sig-preview>
+        <span>Tap to Sign (Old Signature)</span>
+      </div>
+      <div class="row">
+        <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
+      </div>
     </div>
 
-      <div class="sig-preview" id="preview_simple_newsig" onclick="openSig('simple_newsig')">
-      <span>Tap to Sign (New Signature)</span>
-    </div>
-    <div class="row">
-      <button id="clearPreview_Simple_Newsig" class="secondary" type="button">Clear Signature</button>
+    <div class="section" data-sig-role="newsig" data-sig-title="Sign: New Signature">
+      <div class="sig-preview" data-sig-preview>
+        <span>Tap to Sign (New Signature)</span>
+      </div>
+      <div class="row">
+        <button class="secondary" type="button" data-sig-clear>Clear Signature</button>
+      </div>
     </div>
   </section>
 
-   <!-- SECTION: Others -->
-  <section class="section" id="OtherSection">
+  <!-- SUB-SECTION: Others -->
+  <section class="section" id="OtherSection" style="display: none;">
     <h2>E. Others</h2>
     <div class="row">
       <input id="Simple_Update_Others_Line1" class="persist" type="text" placeholder="Line 1">
-      </div>
-      <div class="row">
+    </div>
+    <div class="row">
       <input id="Simple_Update_Others_Line2" class="persist" type="text" placeholder="Line 2">
-      </div>
-      <div class="row">
+    </div>
+    <div class="row">
       <input id="Simple_Update_Others_Line3" class="persist" type="text" placeholder="Line 3">
-      </div>
-      <div class="row">
+    </div>
+    <div class="row">
       <input id="Simple_Update_Others_Line4" class="persist" type="text" placeholder="Line 4">
-      </div>
+    </div>
   </section>
-   </div><!-- (End) STEP 3: Options -->
+</div><!-- (End) STEP 3: Options -->
+
     
   <div class="wizard-step"><!-- STEP 4: Sign -->
   <section class="section">
@@ -874,35 +898,6 @@ a.back-link svg {margin-left: -6px;transform: translateY(0.5px);stroke: #007aff 
 /* ---------- CONFIG ---------- */
 const PDF_FILENAME = "Request For Change of Customer Details And Payment Method_LF5188_fillable.pdf";
 
-// ----------------- Section inclusion helper -----------------
-const CONTROLLER_BY_SECTION = {
-  UpdateDetails: "Updatedetails",
-  ChangePaymentModeSection: "Changepaymentmode",
-  ChangePaymentMethodSection: "Changepaymentmethod",
-  ChangeSignatureSection: "Changesignature",
-  OtherSection: "Others",
-  UpdateInsuredDetails: "Simple_Update_Insured",
-  UpdatePODetails: "Simple_Update_PO",
-  UpdateNomineeDetails: "Simple_Update_Nominee"
-};
-
-// Returns true if a DOM input (by id) should be exported to the PDF.
-// Walks up the DOM tree: if any ancestor section is controlled by a checkbox
-// that is currently UNchecked, returns false (skip).
-function shouldIncludeFieldByUI(fieldId) {
-  const el = document.getElementById(fieldId);
-  if (!el) return true; // if element isn't present in DOM, include by default
-  let parent = el;
-  while (parent && parent !== document.body) {
-    if (parent.id && CONTROLLER_BY_SECTION[parent.id]) {
-      const controllerId = CONTROLLER_BY_SECTION[parent.id];
-      const cb = document.getElementById(controllerId);
-      if (cb && !cb.checked) return false; // section unticked → skip
-    }
-    parent = parent.parentElement;
-  }
-  return true;
-}
 
 /* ---SAVE STATUS + LOCALSTORAGE (Text, Checkbox, Dropdown) ---------- */
 const saveStatusEl = document.getElementById("saveStatus");
@@ -1051,6 +1046,109 @@ const anyChecked = htmlIds.some(id => {
     console.warn(`PDF checkbox ${pdfFieldName} not found`);
   }
 }
+
+/* =========================================================
+   SECTION TOGGLE MAPPING
+   ========================================================= */
+
+// Map each controlling checkbox ID to its target section container ID
+const SECTION_TOGGLES = [
+  // 1. Top-Level Options -> Main Section Containers
+  { checkboxId: 'Updatedetails',       sectionId: 'UpdateDetailsSection' },
+  { checkboxId: 'Changepaymentmode',   sectionId: 'ChangePaymentModeSection' },
+  { checkboxId: 'Changepaymentmethod', sectionId: 'ChangePaymentMethodSection' },
+  { checkboxId: 'Changesignature',     sectionId: 'ChangeSignatureSection' },
+  { checkboxId: 'Others',               sectionId: 'OtherSection' },
+
+  // 2. Customer Roles -> Inner Subsection Containers
+  { checkboxId: 'Simple_Update_Insured', sectionId: 'UpdateInsuredDetails' },
+  { checkboxId: 'Simple_Update_PO',      sectionId: 'UpdatePODetails' },
+  { checkboxId: 'Simple_Update_Nominee', sectionId: 'UpdateNomineeDetails' }
+];
+
+
+/* =========================================================
+   CORE VISIBILITY TOGGLE FUNCTION
+   ========================================================= */
+
+/**
+ * Forcefully reveals or hides a section container using !important
+ * to override any wizard or framework CSS rules.
+ */
+function toggleSectionVisibility(checkboxId, sectionId) {
+  const checkbox = document.getElementById(checkboxId);
+  const section = document.getElementById(sectionId);
+
+  if (!checkbox || !section) return;
+
+  if (checkbox.checked) {
+    section.style.setProperty('display', 'block', 'important');
+  } else {
+    section.style.setProperty('display', 'none', 'important');
+    
+    // Optional: If a main section is unchecked, automatically uncheck and hide its inner subsections
+    if (checkboxId === 'Updatedetails') {
+      ['Simple_Update_Insured', 'Simple_Update_PO', 'Simple_Update_Nominee'].forEach(subCbId => {
+        const subCb = document.getElementById(subCbId);
+        if (subCb) {
+          subCb.checked = false;
+          if (typeof saveElValue === 'function') saveElValue(subCb);
+        }
+      });
+      // Re-sync inner subsections so they collapse immediately
+      syncAllSectionVisibilities();
+    }
+  }
+}
+
+
+/* =========================================================
+   INITIALIZATION & EVENT BINDING
+   ========================================================= */
+
+/**
+ * Attaches both 'change' and 'click' event listeners to all controlling checkboxes.
+ */
+function initSectionToggleRules() {
+  SECTION_TOGGLES.forEach(({ checkboxId, sectionId }) => {
+    const checkbox = document.getElementById(checkboxId);
+
+    if (checkbox) {
+      ['change', 'click'].forEach(eventType => {
+        checkbox.addEventListener(eventType, () => {
+          // Persist field value if your web filler uses saveElValue
+          if (typeof saveElValue === 'function') {
+            saveElValue(checkbox);
+          }
+          toggleSectionVisibility(checkboxId, sectionId);
+        });
+      });
+    }
+  });
+}
+
+/**
+ * Syncs all section visibilities on page load or after step transitions.
+ */
+function syncAllSectionVisibilities() {
+  SECTION_TOGGLES.forEach(({ checkboxId, sectionId }) => {
+    toggleSectionVisibility(checkboxId, sectionId);
+  });
+}
+
+
+/* =========================================================
+   DOM READY HOOK
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Initialize event listeners on checkboxes
+  initSectionToggleRules();
+
+  // 2. Force UI state to match checked checkboxes on page load/reload
+  syncAllSectionVisibilities();
+});
+
 
 /* ---------- Date Set Today Button ---------- */  
 function setSignedDateToday() {
