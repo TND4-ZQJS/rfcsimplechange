@@ -959,7 +959,6 @@ window.addEventListener("DOMContentLoaded", () => {
    SECTION TOGGLE MAPPING
    ========================================================= */
 
-// Configuration array mapping controlling checkbox IDs to target section IDs
 const SECTION_TOGGLES = [
   // 1. Top-Level Options -> Main Section Containers
   { checkboxId: 'Updatedetails',       sectionId: 'UpdateDetailsSection' },
@@ -979,10 +978,6 @@ const SECTION_TOGGLES = [
    CORE VISIBILITY TOGGLE FUNCTION
    ========================================================= */
 
-/**
- * Forcefully reveals or hides a section container using !important
- * to override potential wizard or global CSS rules.
- */
 function toggleSectionVisibility(checkboxId, sectionId) {
   const checkbox = document.getElementById(checkboxId);
   const section = document.getElementById(sectionId);
@@ -1011,9 +1006,6 @@ function toggleSectionVisibility(checkboxId, sectionId) {
           }
         }
       });
-
-      // Recurse to immediately force-hide child sub-sections
-      syncAllSectionVisibilities();
     }
   }
 }
@@ -1023,9 +1015,6 @@ function toggleSectionVisibility(checkboxId, sectionId) {
    INITIALIZATION & EVENT BINDING
    ========================================================= */
 
-/**
- * Binds both 'change' and 'click' listeners to all specified checkboxes.
- */
 function initSectionToggleRules() {
   SECTION_TOGGLES.forEach(({ checkboxId, sectionId }) => {
     const checkbox = document.getElementById(checkboxId);
@@ -1033,11 +1022,10 @@ function initSectionToggleRules() {
     if (checkbox) {
       ['change', 'click'].forEach(eventType => {
         checkbox.addEventListener(eventType, () => {
-          // Store state if form persistence helper exists
           if (typeof saveElValue === 'function') {
             saveElValue(checkbox);
           }
-          toggleSectionVisibility(checkboxId, sectionId);
+          syncAllSectionVisibilities(); // Sync all states in correct order
         });
       });
     }
@@ -1045,7 +1033,8 @@ function initSectionToggleRules() {
 }
 
 /**
- * Loops through all mapped sections and syncs visibility based on checkbox status.
+ * Syncs all section visibilities in strict order:
+ * Top-level main sections first, then inner subsections second.
  */
 function syncAllSectionVisibilities() {
   SECTION_TOGGLES.forEach(({ checkboxId, sectionId }) => {
@@ -1058,15 +1047,7 @@ function syncAllSectionVisibilities() {
    PDF MAPPING HELPERS
    ========================================================= */
 
-/**
- * Maps multiple role-specific detail checkboxes to a single shared PDF checkbox field.
- * Enforces a 3-tier validation rule:
- * 1. Main 'Update Details' option must be checked.
- * 2. Corresponding Role controller (Insured, PO, Nominee) must be checked.
- * 3. Specific Detail checkbox must be checked.
- */
 function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  // Tier 1: Check if top-level option "A. Update Customer Details" is enabled
   const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
   if (!updateDetailsEnabled) {
     try {
@@ -1077,11 +1058,9 @@ function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
     return;
   }
 
-  // Tier 2 & 3: Check if any detail checkbox AND its respective Role controller are enabled
   const anyChecked = htmlIds.some(id => {
     const el = document.getElementById(id);
     
-    // Determine controlling Role checkbox ID based on detail element ID
     let roleControllerId;
     if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
     else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
@@ -1106,15 +1085,20 @@ function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
 
 
 /* =========================================================
-   DOM READY HOOK
+   DOM READY & PAGE REFRESH HOOKS
    ========================================================= */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Bind input listeners
+function runInitialSync() {
   initSectionToggleRules();
-
-  // Sync initial UI state on page load or step switch
   syncAllSectionVisibilities();
+}
+
+// 1. Initial DOM load
+document.addEventListener('DOMContentLoaded', runInitialSync);
+
+// 2. Browser page restore / Back-Forward Cache (Fixes browser-restored checkbox states on refresh)
+window.addEventListener('pageshow', () => {
+  setTimeout(syncAllSectionVisibilities, 50);
 });
 
 
