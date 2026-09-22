@@ -954,6 +954,7 @@ window.addEventListener("DOMContentLoaded", () => {
   loadFromLocalStorage();
 });
     
+
 /* =========================================================
    SECTION TOGGLE MAPPING
    ========================================================= */
@@ -974,7 +975,7 @@ const SECTION_TOGGLES = [
 
 
 /* =========================================================
-   CORE VISIBILITY TOGGLE & AUTOMATIC ERASE FUNCTION
+   CORE VISIBILITY TOGGLE & INPUT UNLOCK FUNCTION
    ========================================================= */
 
 function toggleSectionVisibility(checkboxId, sectionId) {
@@ -987,54 +988,34 @@ function toggleSectionVisibility(checkboxId, sectionId) {
 
   if (isChecked) {
     section.style.setProperty('display', 'block', 'important');
-
-    // Enable all inputs inside section when visible
-    section.querySelectorAll('input, select, textarea').forEach(input => {
-      input.disabled = false;
-    });
-
   } else {
     section.style.setProperty('display', 'none', 'important');
 
-    // Erase/reset all fields inside the section when collapsed
-    const childInputs = section.querySelectorAll('input, select, textarea');
-    childInputs.forEach(input => {
-      if (input.type === 'checkbox' || input.type === 'radio') {
-        input.checked = false;
-      } else {
-        input.value = '';
-      }
-
-      input.disabled = true;
-
-      // Persist cleared state if helper exists
-      if (typeof saveElValue === 'function') {
-        saveElValue(input);
-      }
-    });
-
-    // Auto-collapse and clear inner sub-sections if Option A is unchecked
+    // Auto-collapse and uncheck inner sub-sections if Option A is unchecked
     if (checkboxId === 'Updatedetails') {
-      const childRoleIds = [
+      const childCheckboxes = [
         'Simple_Update_Insured', 
         'Simple_Update_PO', 
         'Simple_Update_Nominee'
       ];
 
-      childRoleIds.forEach(roleId => {
-        const roleCb = document.getElementById(roleId);
-        if (roleCb) {
-          roleCb.checked = false;
+      childCheckboxes.forEach(subCbId => {
+        const subCb = document.getElementById(subCbId);
+        if (subCb) {
+          subCb.checked = false;
           if (typeof saveElValue === 'function') {
-            saveElValue(roleCb);
+            saveElValue(subCb);
           }
         }
       });
-
-      // Synchronize inner sub-sections immediately
-      syncAllSectionVisibilities();
     }
   }
+
+  // Ensure all inputs inside visible sections are interactive/enabled
+  const childInputs = section.querySelectorAll('input, select, textarea');
+  childInputs.forEach(input => {
+    input.disabled = !isChecked;
+  });
 }
 
 
@@ -1067,47 +1048,6 @@ function syncAllSectionVisibilities() {
 
 
 /* =========================================================
-   PDF MAPPING HELPERS
-   ========================================================= */
-
-function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
-  if (!updateDetailsEnabled) {
-    try {
-      pdfDoc.getForm().getCheckBox(pdfFieldName).uncheck();
-    } catch (e) {
-      console.warn(`PDF checkbox ${pdfFieldName} not found`);
-    }
-    return;
-  }
-
-  const anyChecked = htmlIds.some(id => {
-    const el = document.getElementById(id);
-    
-    let roleControllerId;
-    if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
-    else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
-    else if (id.includes("Nominee")) roleControllerId = "Simple_Update_Nominee";
-    
-    const roleController = document.getElementById(roleControllerId);
-
-    return el && el.checked && roleController && roleController.checked;
-  });
-
-  try {
-    const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
-    if (anyChecked) {
-      field.check();
-    } else {
-      field.uncheck();
-    }
-  } catch (e) {
-    console.warn(`PDF checkbox ${pdfFieldName} not found`);
-  }
-}
-
-
-/* =========================================================
    DOM READY & REFRESH HOOKS
    ========================================================= */
 
@@ -1119,9 +1059,10 @@ function runInitialSync() {
 document.addEventListener('DOMContentLoaded', runInitialSync);
 
 window.addEventListener('pageshow', () => {
-  setTimeout(syncAllSectionVisibilities, 50);
+  setTimeout(() => {
+    syncAllSectionVisibilities();
+  }, 50);
 });
-
 
 
 
