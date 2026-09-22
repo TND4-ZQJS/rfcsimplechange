@@ -975,7 +975,7 @@ const SECTION_TOGGLES = [
 
 
 /* =========================================================
-   CORE VISIBILITY TOGGLE FUNCTION
+   CORE VISIBILITY TOGGLE & INPUT UNLOCK FUNCTION
    ========================================================= */
 
 function toggleSectionVisibility(checkboxId, sectionId) {
@@ -984,7 +984,9 @@ function toggleSectionVisibility(checkboxId, sectionId) {
 
   if (!checkbox || !section) return;
 
-  if (checkbox.checked) {
+  const isChecked = checkbox.checked;
+
+  if (isChecked) {
     section.style.setProperty('display', 'block', 'important');
   } else {
     section.style.setProperty('display', 'none', 'important');
@@ -1008,6 +1010,12 @@ function toggleSectionVisibility(checkboxId, sectionId) {
       });
     }
   }
+
+  // Ensure all inputs inside visible sections are interactive/enabled
+  const childInputs = section.querySelectorAll('input, select, textarea');
+  childInputs.forEach(input => {
+    input.disabled = !isChecked;
+  });
 }
 
 
@@ -1025,17 +1033,13 @@ function initSectionToggleRules() {
           if (typeof saveElValue === 'function') {
             saveElValue(checkbox);
           }
-          syncAllSectionVisibilities(); // Sync all states in correct order
+          syncAllSectionVisibilities();
         });
       });
     }
   });
 }
 
-/**
- * Syncs all section visibilities in strict order:
- * Top-level main sections first, then inner subsections second.
- */
 function syncAllSectionVisibilities() {
   SECTION_TOGGLES.forEach(({ checkboxId, sectionId }) => {
     toggleSectionVisibility(checkboxId, sectionId);
@@ -1044,48 +1048,7 @@ function syncAllSectionVisibilities() {
 
 
 /* =========================================================
-   PDF MAPPING HELPERS
-   ========================================================= */
-
-function mapSharedCheckboxToPdf(pdfDoc, pdfFieldName, htmlIds) {
-  const updateDetailsEnabled = document.getElementById("Updatedetails")?.checked;
-  if (!updateDetailsEnabled) {
-    try {
-      pdfDoc.getForm().getCheckBox(pdfFieldName).uncheck();
-    } catch (e) {
-      console.warn(`PDF checkbox ${pdfFieldName} not found`);
-    }
-    return;
-  }
-
-  const anyChecked = htmlIds.some(id => {
-    const el = document.getElementById(id);
-    
-    let roleControllerId;
-    if (id.includes("Insured")) roleControllerId = "Simple_Update_Insured";
-    else if (id.includes("PO")) roleControllerId = "Simple_Update_PO";
-    else if (id.includes("Nominee")) roleControllerId = "Simple_Update_Nominee";
-    
-    const roleController = document.getElementById(roleControllerId);
-
-    return el && el.checked && roleController && roleController.checked;
-  });
-
-  try {
-    const field = pdfDoc.getForm().getCheckBox(pdfFieldName);
-    if (anyChecked) {
-      field.check();
-    } else {
-      field.uncheck();
-    }
-  } catch (e) {
-    console.warn(`PDF checkbox ${pdfFieldName} not found`);
-  }
-}
-
-
-/* =========================================================
-   DOM READY & PAGE REFRESH HOOKS
+   DOM READY & REFRESH HOOKS
    ========================================================= */
 
 function runInitialSync() {
@@ -1093,13 +1056,14 @@ function runInitialSync() {
   syncAllSectionVisibilities();
 }
 
-// 1. Initial DOM load
 document.addEventListener('DOMContentLoaded', runInitialSync);
 
-// 2. Browser page restore / Back-Forward Cache (Fixes browser-restored checkbox states on refresh)
 window.addEventListener('pageshow', () => {
-  setTimeout(syncAllSectionVisibilities, 50);
+  setTimeout(() => {
+    syncAllSectionVisibilities();
+  }, 50);
 });
+
 
 
 /* ---------- Date Set Today Button ---------- */  
